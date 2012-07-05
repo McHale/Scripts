@@ -1,0 +1,8 @@
+//to target a mining spot
+
+local charX = UO.CharPosX
+local charY = UO.CharPosY
+
+function getTargetTile(cardinalDirection)
+
+

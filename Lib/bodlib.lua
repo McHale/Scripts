@@ -1,0 +1,647 @@
+-------------------------------------------------------------------
+-----------------BULK ORDER DEED LIBRARY---------------------------
+-------------------------------------------------------------------
+-------------------------------------------------------------------
+-------BODS ARE IDENTIFIED AS DEEDS IN YOUR BACKPACK
+-------------------------------------------------------------------
+-------------------------------------------------------------------
+-------BOD IDENTIFYING FUNCTIONS
+----
+----bod:Caliber()  returns a string "Normal" or "Exceptional"
+----
+----bod:Resource(bod_type) returns a string containing resource type
+--or an Error String If one was failed to be found.
+----
+----bod:Base() returns a number/string of 10,15,or 20 or error string
+----
+----bod:Item(deed) returns a list of item name - either {name} if its a small
+--bod or {name1,name2..nameN} if its a large bulk order deed
+----
+----bod:Size(bod_type) returns a string denoting bod size
+----
+----bod:RewardValue(resource,base,size,caliber,bod_type) returns calculated reward value
+----
+----bod:RewardTier(value,bod_type) returns the tier/ranking of the reward to be returned
+----
+----bod:Reward(tier,bod_type) returns string listing bod reward
+----
+-------------------------------------------------------------------
+-------------------------------------------------------------------
+-------------------------------------------------------------------
+
+dofile("itemlib.lua")
+dofile("basiclib.lua")
+
+------Index represents Bodtype in all values listed
+BOD_TYPES = {"BOWCRAFT","BLACKSMITH","CARPENTRY","TAILORING"}
+
+--------------------------STATIC INFORMATION----------------
+------------------------------------------------------------
+-------------CRAFT GUMP LOCATIONS--------------------------
+Craft_Gump = {
+-------Bowcraft item Category & Index Values in craft gump
+{
+[3]={"Bow","Crossbow","Heavy Crossbow","Composite Bow",
+"Repeating Crossbow","Yumi"}
+},
+-------Blacksmith item Category & Index Values in craft gump 
+{
+[1]={"Ringmail Gloves","Ringmail Leggings","Ringmail Sleeves","Ringmail Tunic"},
+[2]={"Chainmail  Coif","Chainmail Leggings","Chainmail Tunic"},
+[3]={"Platemail Arms","Platemail Gloves","Platemail Gorget","Platemail Legs","Platemail Tunic",
+"Female Plate"},
+[4]={"Bascinet","Close Helmet","Helmet","Norse Helm","Plate Helm"},
+[6]={"Buckler ","Bronze Shield","Heater Shield","Metal Shield",
+"Metal Kite Shield","Tear Kite Shield"},
+[7]={"Bone Harvester","Broadsword","Crescent Blade","Cutlass","Dagger","Katana",
+"Kryss","Longsword","Scimitar","Viking Sword"},
+[9]={"Axe","Battle Axe","Double Axe","Executioner's Axe","Large Battle Axe",
+"Two Handed Axe","War Axe"},
+[10]={"Bardiche","Bladed Staff","Double Bladed Staff","Halberd","Lance","Pike",
+"Short Spear","Scythe","Spear","War Fork"},
+[11]={"Hammer Pick","Mace","Maul","Scepter","War Mace","War Hammer"}
+},
+-------Carpentry item Category & Index Values in craft gump
+{
+[3]={"Wooden Box","Small Crate","Crate","Large Crate","Wooden Chest","Wooden Shelf","Armoire [red]","Armoire","Plain Wooden Chest"},
+[4]={"Shepherd's Crook","Quarter Staff","Gnarled Staff","Bokuto","Fukiya","Tetsubo"},
+[6]={"Lab Harp","Standing Harp","Drum","Lute","Tambourine","Tambourine [tassel]"}
+},
+-------Tailoring item Category & Index Values in craft gump
+{
+[1]={"Skullcap","Bandana","Floppy Hat","Cap","Wide-Brim Hat","Straw Hat",
+"Tall Straw Hat","Wizard's Hat","Bonnet","Feathered Hat","Tricorne Hat",
+"Jester Hat"},
+[2]={"Doublet","Shirt","Fancy Shirt","Tunic","Surcoat","Plain Dress","Fancy Dress",
+"Cloak","Robe","Jester Suit"},
+[3]={"Short Pants","Long Pants","Kilt","Skirt"},
+[4]={"Body Sash","Half Apron","Full Apron"},
+[5]={"Elven Boots","Fur Boots","Ninja Tabi","Waraji and Tabi",
+"Sandals","Shoes","Boots","Thigh Boots"},
+[6]={"Spell Woven Britches","Song Woven Mantle","Stitcher's Mittens",
+"Leather Gorget","Leather Cap","Leather Gloves","Leather Sleeves",
+"Leather Leggings","Leather Tunic"},
+[8]={"Studded Gorget","Studded Gloves","Studded Sleeves","Studded Leggings",
+"Studded Tunic"},
+[9]={"Leather Shorts","Leather Skirt","Leather Bustier","Studded Bustier",
+"Female Leather Armor","Studded Armor"},
+[10]={"Bone Helmet","Bone Gloves","Bone Arms","Bone Leggings","Bone Armor"}
+}
+}
+-----------------------------------------------------------
+-------------EXCEPTIONAL LISTS-----------------------------
+Exceptional = {
+-------Bowcraft exceptional values -- Exceptional[1]
+{["Exceptional"]=200,["Normal"]=0},
+-------Blacksmith exceptional values -- Exceptional[2]
+{["Exceptional"]=200,["Normal"]=0},
+-------Carpentry exceptional values -- Exceptional[3]
+{["Exceptional"]=200,["Normal"]=0},
+-------Tailoring exceptional values -- Exceptional[4]
+{["Exceptional"]=100,["Normal"]=0}
+}
+
+-----------------------------------------------------------
+-------------BASE LIST------------------------------------
+Base = {["10"]=10,["15"]=25,["20"]=50}
+-----------------------------------------------------------
+-------------SIZE LISTS------------------------------------
+Size = {
+-------Bowcraft sizes -- Size[1]
+{["Small Bod"]=0, ["3-piece"]=200,["6-piece"]=400},
+-------Blacksmith sizes -- Size[2]
+{["Small Bod"]=0,["Chainmail"]=300,["Ringmail"]=200,["Platemail"]=400},
+-------Carpentry sizes -- Size[3]
+{["Small Bod"]=0,["2-piece"]=50, ["3-piece"]=100,["4-piece"]=200,["5-piece"]=300,["6-piece"]=400},
+-------Tailoring sizes -- Size[4]
+{["Small Bod"]=0,["4-piece"]=300,["5-piece"]=400,["6-piece"]=500}
+}
+
+------------RESOURCE LISTS---------------------------------
+Resource = {
+-------Bowcraft resources -- Resource[1]
+{["Natural Wood"]=0,["Pine Wood"]=200,
+["Ash Wood"]=250,["Mohogany Wood"]=300,["Yew Wood"]=350,
+["Oak Wood"]=400,["Zircote Wood"]=450,["Ebony Wood"]=500,
+["Bamboo Wood"]=550,["Purple Heart"]=600,["Redwood Wood"]=650,
+["Petrified Wood"]=700},
+-------Blacksmith resources --Resource[2]
+{["Iron Ingots"]=0,["Dull Copper"]=200,
+["Shadow Iron"]=250,["Copper Ingots"]=300,["Bronze Ingots"]=350,
+["Gold Ingots"]=400,["Agapite Ingots"]=450,["Verite Ingots"]=500,
+["Valorite Ingots"]=550,["Blaze Ingots"]=600,["Ice Ingots"]=650,
+["Toxic Ingots"]=700,["Electrum Ingots"]=750,["Platinum Ingots"]=800},
+-------Carpentry resources --Resource[3]
+{["Natural Wood"]=0,["Pine Wood"]=200,
+["Ash Wood"]=250,["Mohogany Wood"]=300,["Yew Wood"]=350,
+["Oak Wood"]=400,["Zircote Wood"]=450,["Ebony Wood"]=500,
+["Bamboo Wood"]=550,["Purple Heart"]=600,["Redwood Wood"]=650,
+["Petrified Wood"]=700},
+-------Tailoring resources --Resource[4]
+{["Cloth/Leather"]=0,["Spined Leather"]=50,
+["Horned Leather"]=100,["Barbed Leather"]=150,["Polar Leather"]=200,
+["Synthetic Leather"]=250,["Blaze Leather"]=300,["Daemonic Leather"]=350,
+["Shadow Leather"]=400,["Frost Leather"]=450,["Ethereal Leather"]=500}
+
+}
+
+-------------Reward LIST-----------------------------------
+Reward = { 
+-------Bowcraft rewards --Reward[1]
+{"Bods value is less than 50 : not documented on wiki", "[75/25] Sturdy Axe / Boards", "[75/25] Garg Axe / Crafting Armor +1", "[66/33] Prospector's Axe / Crafting Armor +1", "[50/50] Stain of Durability / Crafting Armor +1", "[75/25] Pine Runic / Deco Item", "[66/33] Pine Runic / Deco Item", "[50/50] Ash Runic / Deco Item", "[66/33] Ash Runic / 5-use Dip Tub", "[50/50] Mohogany Runic / 5-use Dip Tub", "[50/50] Mohogany Runic / 120 Bowcraft PS", "[33/33/33] Yew Runic / 120 LJ PS / Crafting Armor +3", "[33/33/33] Yew Runic / +10 Ancient Hammer / Crafting Armor +3", "[33/33/33] Oak Runic / +10 Ancient Hammer / Crafting Armor +3", "[33/33/33] Oak Runic / +20 Ancient Hammer / 25-use Dip Tub", "[33/33/33] Ebony Runic / +20 Ancient Hammer / 25-use Dip Tub", "[50/50] Bamboo Runic / +30 Ancient Hammer", "[50/50] Purple Heart Runic / +30 Ancient Hamer", "[50/50] Redwood Runic / +40 Ancient Hammer", "[50/50] Petrified Runic / +40 Ancient Hammer", "[50/50] 50-use Dip Tub / Crafting Armor +5"},
+-------Blacksmith rewards --Reward[2]
+{ "[50/50] Sturdy Shovel / Sturdy Smith Hammer", "[50/50] Sturdy Pickaxe / Sturdy Smith Hammer", "[90/10] Sturdy Shovel / Crafting Armor +1", "[90/10] Sturdy Pickaxe / Crafting Armor +1", "[90/10] Prospector's Tool / Crafting Armor +1", "[50/25/25] Fort Powder / Garg Pick / Deco Item", "[33/33/33] Dull Copper Runic / Garg Pick / Deco Item", "[60/40] Dull Copper Runic / Shadow Iron Runic", "[50/50] Shadow Iron Runic / Colored Forge Deed", "[75/25] Shadow Iron Runic / Colored Anvil Deed", "[50/50] Copper Runic / Deco Item", "[75/25] Copper Runic / Colored Anvil Deed", "[50/50] Bronze Runic / Deco Item", "[50/50] Ancient Smithy Hammer +10 / Crafting Armor +3", "[50/50] Garg Pick / Crafting Armor +3", "[?] Ancient Smithy Hammer +15 / Crafting Armor +3/Gold Runic", "[50/50] Gold Runic / Charged Dye Tub", "[50/50] Ancient Smithy Hammer +30 / Charged Dye Tub", "[50/50] Agapite Runic / Smither's Protector", "[50/50] Ancient Smith Hammer +60 / Smither's Protector", "[50/50] Verite Runic / Crafting Armor +5", "[50/50] Valorite Runic / Crafting Armor +5", "[50/50] Blaze Runic / Crafting Armor +5", "[50/50] Ice Runic / Bag of Resources", "[50/50] Toxic Runic / Bag of Resources", "[50/50] Electrum Runic / Sharpening Blade", "[50/50] Platinum Runic / Sharpening Blade" },
+------Carpentry rewards --Reward[3]
+{ "Bod value is less than 50 : not documented on wiki", "[75/25] Sturdy Axe / Boards", "[75/25] Garg Axe / Crafting Armor +1", "[66/33] Prospector's Axe / Crafting Armor +1", "[50/50] Stain of Durability / Crafting Armor +1", "[75/25] Pine Runic / Deco Item", "[66/33] Pine Runic / Deco Item", "[50/50] Ash Runic / Deco Item", "[66/33] Ash Runic / Nails(?)", "[50/50] Mohogany Runic / Nails(?)", "[50/50] Mohogany Runic / 120 Carpentry PS", "[33/33/33] Yew Runic / 120 LJ PS / Crafting Armor +3", "[33/33/33] Yew Runic / +10 Ancient Hammer / Crafting Armor +3", "[33/33/33] Oak Runic / Evil Deco Item / Crafting Armor +3", "[33/33/33] Zircote Runic / +20 Ancient Hammer / Nails(?)", "[33/33/33] Ebony Runic Saw / Evil Deco Item / Nails(?)", "[50/50] Bamboo Runic / +30 Ancient Hammer", "[50/50] Purple Heart Runic / Evil Deco Item", "[50/50] Redwood Runic / +40 Ancient Hammer", "[50/50] Petrified Runic / Evil Deco Item", "[50/50] Bag of Resources / Crafting Armor +5" },
+------Tailoring rewards --Reward[4]
+{ "[50/50] Cloth 1 / Colored Loom", "[50/50] Cloth 2 / Colored Loom", "[50/50] Cloth 3 / Leather", "[60/30/10] Cloth 4 / Leather / Crafting Armor +1", "[40/40/20] Cloth 5 / Leather / Crafting Armor +1", "[33/33/33] Stretched Hide / Colored Scissors / Crafting Armor +1", "[50/50] Spined Runic / Colored Scissors ", "[60/20/20] Tapestry / Colored Scissors / Sturdy Sewing Kit", "[50/50] Bear Rug / Sturdy Sewing Kit", "[50/50] Deco Item / Master's Knife", "[33/33/33] Clothing Bless Deed / Deco Item / Master's Knife", "[50/50] Horned Runic / Master's Knife", "[50/50] Horned Runic / Crafting Armor +3", "[50/50] Barbed Runic / Crafting Armor +3", "[33/33/33] Barbed Runic / Crafting Armor +3 / Garg Knife", "[33/33/33] Polar Runic / Charged Dye Tub / Garg Knife", "[50/50] Polar Runic / Charged Dye Tub", "[50/50] Synthetic Runic / Crafting Armor +5", "[50/50] Blaze Runic / Crafting Armor +5", "[33/33/33] Daemonic Runic / Tailor's Protector / Crafting Armor +5", "[50/50] Shadow Runic / Tailor's Protector", "[50/50] Frost Runic / Bag of Resources", "[50/50] Ethereal Runic / Bag of Resources" }
+ }
+------------Reward Range LIST------------------------------
+Reward_Range = {
+------Bowcraft rewards range --Reward_Range[1]
+{0, 50, 200, 400, 450, 500, 550,600, 650, 700, 750, 800, 850, 900, 950, 1000, 1050, 1100, 1150, 1200, 1250},
+------Blacksmith rewards range --Reward_Range[2]
+{0, 25, 50, 200, 400, 450, 500, 550, 600, 625, 650, 675, 700, 750, 800, 850, 925, 1000, 1050, 1100, 1150, 1200, 1250, 1300, 1350, 1400, 1450},
+------Carpentry rewards range --Reward_Range[3]
+{0, 50, 200, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000, 1050, 1100, 1150, 1200, 1250},
+------Tailoring rewards range --Reward_Range[4]
+{0, 50, 100, 150, 200, 300, 350, 400, 450, 500, 550, 600, 650, 700, 750, 800, 850, 900, 950, 1000, 1050, 1100, 1150}
+}
+------------------------------------------------------------
+-------------SOLUTION TO DYNAMICALLY FINDING BOD TYPE-------
+------------------------------------------------------------
+Bowcraft_Items ={"Bow","Crossbow","Composite Bow","Heavy Crossbow","Repeating Crossbow","Yumi"}
+Carpentry_Items = {'Wooden Chest' ,'Tetsubo' ,'Crate' ,'Drum' ,'Wooden Box' ,'Small Crate' ,'Bokuto' ,'Wooden Shield' ,'Standing Harp' ,'Tambourine' ,'Lap Harp' ,'Lute' ,'Quarter Staff' , 'Gnarled Staff' }
+Blacksmith_Items = {"Heater Shield","Platemail Arms" ,"Platemail Legs" ,"Plate Helm" ,"Platemail Gorget" ,"Platemail Gloves" ,"Female Plate","Platemail Tunic" ,"Longsword" ,"Mace" ,"War Fork" ,"Battle Axe" ,"War Mace" ,"Maul" ,"Helmet" ,"Norse Helm" ,"Bronze Shield" ,"Broadsword" ,
+"Bascinet" ,"Double Axe" ,"War Axe" ,"Katana" ,"Viking Sword" , "Short Spear" ,"Bardiche" ,
+"Two Handed Axe" ,"Spear" ,"Executioner's Axe" ,"Hammer Pick" ,"Axe" ,"Metal Kite Shield" ,"Cutlass" ,"Halberd" ,"Scimitar" ,"Kryss" ,"Buckler " ,"Large Battle Axe" ,
+"Chainmail  Coif" ,"Chainmail Leggings" ,"Chainmail Tunic" ,"Ringmail Gloves" ,"Ringmail Tunic" ,"Ringmail Sleeves" , "Ringmail Leggings","War Hammer","Metal Shield"}
+
+------------------------------------------------------------
+----------------ITEMS IN LARGE BODS-------------------------
+LgItems={
+------Bowcraft items that fit into large bods --LgItems[1]
+{{"Bow","Crossbow","Composite Bow","Heavy Crossbow","Repeating Crossbow","Yumi"},
+{"Bow","Yumi","Composite Bow"},
+{"Heavy Crossbow","Repeating Crossbow","Crossbow"}},
+------Blacksmith items that fit into large bods --LgItems[2]
+{{"Chainmail  Coif","Chainmail Leggings","Chainmail Tunic"},
+{"Ringmail Gloves","Ringmail Tunic","Ringmail Sleeves","Ringmail Leggings"},
+{"Platemail Arms","Plate Helm","Platemail Legs","Platemail Gorget","Platemail Gloves","Platemail Tunic"}},
+------Carptentry items that fit into large bods --LgItems[3]
+{},
+------Tailoring items that fit into large bods --LgItems[4]
+{{"Bone Helmet","Bone Gloves","Bone Arms","Bone Leggings","Bone Armor"},
+{"Straw Hat","Tunic","Long Pants","Boots"},
+{"Leather Skirt","Leather Bustier","Leather Shorts","Female Leather Armor","Female Studded Armor","Studded Bustier"},
+{"Floppy Hat", "Full Apron","Plain Dress" , "Sandals"},
+{"Bandana","Shirt","Skirt","Thigh Boots"}, 
+{"Tricorne Hat", "Cap","Wide Brim Hat","Tall Straw Hat"},
+{"Jester Hat","Jester Suit","Cloak","Shoes"},
+{"Bonnet","Half Apron","Fancy Dress","Sandals"},
+{"Leather Gorget","Leather Cap","Leather Gloves","Leather Sleeves","Leather Leggings","Leather Tunic"},
+{"Studded Gorget","Studded Gloves","Studded Sleeves","Studded Leggings","Studded Tunic"},
+{"Boots","Thigh Boots","Shoes","Sandals"},
+{"Skull Cap","Doublet","Kilt","Shoes"},
+{"Feathered Hat","Surcoat","Fancy Shirt","Short Pants","Thigh Boots"},
+{"Wizard's Hat","Body Sash","Robe","Boots"}}
+}
+
+------------------------------------------------------------
+------------------------------------------------------------
+------------------------------------------------------------	
+
+bod = {}
+bod_meta = {__index = bod}
+
+bods = {}
+bods_meta = {__index = bods}
+
+function bod:scanBod(bod_index,book_name,scan)
+    bod_index = bod_index or 0
+    book_name = book_name or ""
+    local bods = item:scan():cont(UO.BackpackID):tp(8792):property():name("A Bulk Order Deed")
+    if next(bods) ~= nil then
+	local b = bods:pop(i)
+	b["bod_index"] = bod_index
+	b["book_name"] = book_name	
+	setmetatable(b,bod_meta)	
+	b["bod_type"] = b:BodType()
+	b["items"] = b:Items()
+	b["size"] = b:Size()
+	b["caliber"] = b:Caliber()
+	b["base"] = b:Base()
+	b["resource"] = b:Resource()
+	b["largeFits"] = b:LargeFitting()
+	b["value"] = b:RewardValue()
+	b["tier"] = b:RewardTier()
+	b["reward"] =  b:Reward()
+	--b:ExMsgAll()
+	--wait(2000)
+	--b:ExCrossRef()
+    	return b
+    end
+    return false
+end
+
+
+
+----Crafting Related functions 
+function bod:craftCategory()
+	for k,v in pairs(Craft_Gump[self.bod_type]) do
+		for i = 1, #v do
+			if v[i] == self.items[1] then
+				return k
+			end
+		end
+	end
+end
+
+function bod:craftIndex()
+	for k,v in pairs(Craft_Gump[self.bod_type]) do
+		for i = 1, #v do
+			if v[i] == self.items[1] then
+				return i
+			end
+		end
+	end
+end
+
+function bod:getProfession()
+	if self.bod_type == 1 then return "bowyer"
+	elseif self.bod_type == 2 then return "smith"
+	elseif self.bod_type == 3 then return "carpenter"
+	else return "tailor" end
+end
+
+function bod:BodType()
+	local items = self:Items()
+	local next = next
+	if next(items) == nil then 
+		UO.ExMsg(UO.CharID,3,33,"Could not get type- stopping script")
+		stop()
+	end
+	local toCheck = items[1] --only need to find one item
+	for i=1,#Bowcraft_Items do
+		if toCheck == Bowcraft_Items[i] then
+			return 1
+		end
+	end
+	for i=1,#Blacksmith_Items do
+		if toCheck == Blacksmith_Items[i] then
+			return 2
+		end
+	end
+	for i=1,#Carpentry_Items do
+		if toCheck == Carpentry_Items[i] then
+			return 3
+		end
+	end
+	return 4
+end
+	
+
+function bod:Caliber()
+	s,e = string.find(self.stats,"All Items Must Be Exceptional")
+	if s == nil then
+		return "Normal"
+	else
+		return "Exceptional"
+	end
+end
+
+function bod:Resource()
+	s,e,resource = string.find(self.stats,"All Items Must Be Crafted With (%a+%s?%a+)")
+	if resource == nil then	
+		if self.bod_type == 2 then return "Iron Ingots" 
+		elseif self.bod_type ==1 or self.bod_type == 3 then
+			return "Natural Wood"
+		elseif self.bod_type==4 then
+			return "Cloth/Leather"
+		end
+	end
+	return resource
+end
+
+function bod:Items()
+	smDeeds = {}
+	for piece,amt in string.gmatch(self.stats,"(%a+%p?%a*%s*%a*%s?%a*): (%d+)") do
+     		if piece ~= "Amount To Make" then
+       			table.insert(smDeeds, piece)	
+    		end
+	end
+	return smDeeds
+end
+
+function bod:ItemsValues()
+	values = {}
+	for piece,amt in string.gmatch(self.stats,"(%a+%p?%a*%s*%a*%s?%a*): (%d+)") do
+     		if piece ~= "Amount To Make" then
+       			table.insert(values, amt)	
+    		end
+	end
+	return values
+end
+
+function bod:Update()
+	self["complete"] = self:Complete()
+end
+
+function bod:Complete()
+	smDeeds = {}
+	for piece,amt in string.gmatch(self.stats,"(%a+%p?%a*%s*%a*%s?%a*): (%d+)") do
+     		if piece ~= "Amount To Make" then
+       			if amt ~= self.base then return false end
+    		end
+	end
+	return true
+end
+
+function bod:Base()
+	s,e,base = string.find(self.stats,"Amount To %a+: (%d+)")
+	if base == nil then
+		UO.ExMsg(UO.CharID,3,33,"Couldn't Grab Base")
+		return "Error - didn't get a base number"
+	end
+	return base
+end
+
+function bod:Size()
+	count = 0
+	for piece,amt in string.gmatch(self.stats,"(%a+%p?%a*%s*%a*%s?%a*): (%d+)") do
+     		if piece ~= "Amount To Make" then
+       			count = count + 1
+    		end
+	end
+	if count == 1 then
+   		return "Small Bod"
+	else
+		if self.bod_type ~= 2 then
+   			return string.format("%d-piece",count)
+		else
+			if count == 6 then return "Platemail" 
+			elseif count == 4 then return "Ringmail"
+			else return "Chainmail" end
+		end					
+	end
+end
+
+function bod:LargeFitting()
+	local lgItems = LgItems[self.bod_type]
+	if #self.items > 1 or self.size ~= "Small Bod" then
+		return true
+	end
+	local a = {}
+	for i=1,#lgItems do
+		lgBod = lgItems[i]
+		for i=1,#lgBod do
+			---must be small only 1 item
+			if self.items[1] == lgBod[i] then
+				table.insert(a,lgBod)
+			end
+		end
+	end
+	if next(a) ~= nil then
+		return a
+	end
+	return false
+end
+
+function bod:ExMsgBod()
+	size = self.size
+	base = self.base
+	resource = self.resource
+	caliber = self.caliber
+	if not self.largeFits then
+		standAlone = "--Stands Alone"
+	else
+		standAlone = ""
+	end
+--	UO.Macro(1,0,string.format("%s: %s %s [%s]%s",size,resource,base,caliber,standAlone))
+	UO.ExMsg(UO.CharID, 3, 40,string.format("%s: %s %s [%s]%s",size,resource,base,caliber,standAlone))
+end
+
+function bod:ExCrossRef()
+	if self.size == "Small Bod" and self.largeFits then
+		UO.ExMsg(UO.CharID,3,65,"Cross-Referencing....")
+		for i = 1, #self.largeFits do
+			if self.bod_type ~= 2 then
+				local a = {}
+				setmetatable(a,bod_meta)
+				a["base"] = self.base
+				a["size"] = string.format("%d-piece",#self.largeFits[i])
+				a["bod_type"] = self.bod_type
+				a["largeFits"] = true
+				a["caliber"] = self.caliber
+				a["resource"] = self.resource
+				a["value"] = a:RewardValue()
+				a["tier"] = a:RewardTier()
+				a["reward"] = a:Reward()
+				a:ExMsgAll()
+				wait(3000)
+				UO.ExMsg(UO.CharID,3,65,"--------------------")
+			elseif self.bod_type == 2 then
+				local a = {}
+				setmetatable(a,bod_meta)
+				a["base"] = self.base
+				armor_type = ""
+				if #self.largeFits[i] == 3 then armor_type = "Chainmail"
+				elseif #self.largeFits[i] == 4 then armor_type = "Ringmail"
+				else armor_type = "Platemail" end
+				if armor_type == "" then 
+					UO.ExMsg(UO.CharID,3,33,"Error cross referencing")
+					return
+				end
+				a["size"] = armor_type
+				a["bod_type"] = self.bod_type
+				a["largeFits"] = true
+				a["caliber"] = self.caliber
+				a["resource"] = self.resource
+				a["value"] = a:RewardValue()
+				a["tier"] = a:RewardTier()
+				a["reward"] = a:Reward()
+				a:ExMsgAll()
+				wait(3000)
+				UO.ExMsg(UO.CharID,3,65,"--------------------")
+			end
+	end
+	end
+end
+	
+
+function bod:RewardValue()
+	local b_tp = self.bod_type
+	local baseVal = Base[self.base]
+	local sizeVal = Size[b_tp][self.size]
+	local exceptionalVal = Exceptional[b_tp][self.caliber]
+	local resourceVal = Resource[b_tp][self.resource]
+
+	return baseVal + sizeVal + exceptionalVal + resourceVal
+end
+
+function bod:RewardTier()
+	toReturn = -1
+	local b_tp = self.bod_type
+	reward_range = Reward_Range[b_tp]
+	for i = 1, #reward_range do
+		if i == #reward_range then return i end
+		if self.value >= reward_range[i] and self.value < reward_range[i+1] then
+			return i
+		end
+	end
+	return toReturn
+end
+
+function bod:Reward()
+	return Reward[self.bod_type][self.tier]
+end
+
+function bod:ExMsgReward()
+--	UO.Macro(1,0,string.format("%d - %s",self.value, self.reward))
+	UO.ExMsg(UO.CharID, 3, 50,string.format("%d - %s",self.value, self.reward))
+end
+
+function bod:ExMsgAll()
+	self:ExMsgBod()
+	self:ExMsgReward()
+end
+
+function bod:compare(otherBod)
+	nameA, nameB = self.name, otherBod.name
+	baseA, baseB = self.base, otherBod.base
+	expA, expB = self.caliber, otherBod.caliber
+	resourceA, resourceB = self.resource, otherBod.resource
+	if nameA == nameB and baseA == baseB and expA == expB and resourceA == resourceB then 
+		return true
+	end
+	return false
+end
+
+function bod:SubBod(smBod)
+	if self.size == "Small Bod" or smBod.size ~= "Small Bod" then
+		return false
+	end
+	if self.base == smBod.base and self.resource == smBod.resource then
+		if self.caliber == "Normal" or self.caliber == smBod.caliber then
+			return true
+		end
+	end
+end
+
+--------------------------------------------------------------
+-----------------------BOD BOOK FUNCTIONS---------------------
+function bods:scanBooks()
+    local bod_books = item:scan():cont(UO.BackpackID):tp(8793):property():name("Bulk Order Book")
+    local next = next
+    if next(bod_books) == nil then
+	UO.ExMsg(UO.CharID,3,33,"There are no BOD books in your main pack.")
+    end
+    local deeds = {}	
+    for i = 1,#bod_books do 
+	book = bod_books:pop(i)
+	s,e,count = string.find(book.stats,"Deeds In Book: (%d+)")
+	if count == 0 then
+		UO.ExMsg(UO.CharID,3,33,"There are no deeds in your book of small bods")
+		stop()
+	end
+	s,e,name = string.find(book.stats,"Book Name: (%a+%s?%a+)")
+	if name ~= nil then
+		book["book_name"] = name
+	end
+	for i=1, count do
+		book:use():waitContSize(615,454)
+		Click.Gump(40,105)
+		wait(1000)
+		b = bod:scanBod(i,name)
+		table.insert(deeds, b)
+		if not b.standAlone then
+    			UO.Drag(b.id,b.stack)
+    			UO.DropC(book.id)
+			wait(1000)
+		end
+	end
+    end
+    setmetatable(deeds,bods_meta)
+    return deeds
+end
+
+function bods:tier(nTier)
+    local a = {} 
+    if type(nTier) ~= "table" then
+        nTier = {nTier}
+    end
+    
+    for i = 1,#self do
+        for j = 1,#nTier do
+            if self[i].tier == nTier[j] then
+                table.insert(a,self[i])
+    
+            end
+        end
+    end
+    
+    setmetatable(a,bods_meta)
+
+    return a
+end
+
+function bods:size(nSize,keep)
+    keep = keep or true
+    local a = {} 
+    if type(nSize) ~= "table" then
+        nSize = {nSize}
+    end   
+    for i = 1,#self do
+	if keep then
+		if contains(nSize, self[i].size) then
+			table.insert(a,self[i])
+		end
+	else
+		if not contains(nSize, self[i].size) then
+                	table.insert(a,self[i])
+       	 	end
+	end
+    end
+    
+    setmetatable(a,bods_meta)
+    return a
+end
+
+function bods:bod_tp(nType)
+    local a = {}
+    
+    if type(nType) ~= "table" then
+        nType = {nType}
+    end
+    
+    for i = 1,#self do
+        for j = 1,#nType do
+            if self[i].tp == nType[j] then
+                table.insert(a,self[i])
+            end
+        end
+    end
+    
+    setmetatable(a,bods_meta)
+    return a
+end
+
+function bods_setmetatable(theList)
+	setmetatable(theList,bods_meta)
+end
+
+function contains(theList, theItem)
+	local next = next
+	if next(theList) == nil then
+		return false
+		--empty list
+	end
+	for i=1, #theList do
+		if type(theList[i]) == "table" then
+			 return theList[i]:compare(theItem)
+		else
+			return theList[i] == them
+		end
+	end
+	return false
+end
