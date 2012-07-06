@@ -1,15 +1,15 @@
 --|||COMMON ITEM BOOLEAN||--
-BOH = true
+BOH = false
 BOS = false
 LOOT_BAG = false
-LOOT_GOLD = true
-STORAGE_KEYS = true
+LOOT_GOLD = false
+STORAGE_KEYS = false
 
 --||COMMON STAT VARIABLES||--
 MAX_WEIGHT = 420
 
 --|||COMMON ITEM IDS||--
-BOH_ID = 1076683851
+BOH_ID = "{put your bag of holding id here}"
 TRASH_D = "{put your trash bag id here}"
 LOOT_BAG_ID = "{put your loot bag id here}"
 BOS_ID = "{put your bag of sending id here}"
