@@ -1,30 +1,38 @@
---==================================
+--==========================================================
 -- Script Name: Fire Champ Looter
 -- Author: McHale
 -- Version: 1.0
 -- OpenEUO version tested with: 0.91
 -- Purpose: Loots Gold, Gargoyle Pickaxe, Knife
---==================================
+--==========================================================
+
+------------------------------------------------------------   
+--------------------------IMPORTS---------------------------
+------------------------------------------------------------   
 
 dofile("../Lib/basiclib.lua")
 dofile("../Lib/itemlib.lua")
 dofile("../Lib/storagelib.lua")
 dofile("../Lib/config.lua")
 
------------------------Variables to change------------------
+
+
+------------------------------------------------------------   
+--------------------VARIABLES TO CHANGE---------------------
+------------------------------------------------------------   
 -- Master loot list
 -- See Lib/Storagelib.lua for items types
 -- Change variables in your Lib/config.lua
--- Currently Looting pickaxe, skinning knife, and gold
+-- Currently Looting: pickaxe, skinning knife, and gold
 
 toLoot = {5110,3718,3821}
+
+
+
 ------------------------------------------------------------   
-
+---------------------LOOTING FUNCTION-----------------------
 ------------------------------------------------------------
--- how to find corpses nearby and loots stuff from them
--- and claim them
-------------------------------------------------------------
-
+   
 function loot()
 
 	-- find gargoyle corpses
@@ -46,12 +54,16 @@ function loot()
 		   else
 			if UO.weight < MAX_WEIGHT then
 				looted:drop(UO.BackpackID)
+			else if BOS then
+				Storage.storeGoldBOS()
 			end
 		   end
 		-- drop tools into your backpack
 		else
                     if UO.weight < MAX_WEIGHT then
 		    	looted:drop(UO.BackpackID)
+		    else if STORAGE_KEYS then
+			Storage.storeAll()
 		    end
 		end   
 	end

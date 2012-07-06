@@ -108,6 +108,17 @@ end
 function S.storeRunics()
 	store(8,runic_types)
 end
+
+function S.storeAll()
+	S.storeRunics()
+	S.storeTools()
+	S.storeGems()
+	S.storeWood()
+	S.storeStone()
+	S.storeTailor()
+	s.storeMetal()
+	s.storeSpell()
+end
 ---------------------------------------------------------
 -----------------STORING GOLD----------------------------
 --Store Gold in Bank with Bag of Sending

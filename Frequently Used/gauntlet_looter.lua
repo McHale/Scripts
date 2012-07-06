@@ -1,22 +1,36 @@
-    dofile("../Lib/basiclib.lua")
-    dofile("../Lib/itemlib.lua")
-    dofile("../Lib/storagelib.lua")
-    dofile("../Lib/config.lua")
+--==========================================================
+-- Script Name: Gauntlet Looter
+-- Author: McHale
+-- Version: 1.0
+-- OpenEUO version tested with: 0.91
+-- Purpose: Just Loots Gold
+--==========================================================
 
-    ---------Variables to change--------------
-    ---Master loot list
-    ---Travesty keys 4110, 4111, 4112 NOT Included atm
-    ---picks and knives not on this list
-    ---only gems and spellcaster key objects on the list.
-    ---Gold 3821
-    ----You can view the types in the storagelib and change
-    ----this list to whatever you would like looted.
-    weight = 420
-    
-    ------------------------------------------------------------
-    -- how to find corpses nearby and loots stuff from them
-    -- and claim them
-    ------------------------------------------------------------
+------------------------------------------------------------   
+--------------------------IMPORTS---------------------------
+------------------------------------------------------------   
+
+dofile("../Lib/basiclib.lua")
+dofile("../Lib/itemlib.lua")
+dofile("../Lib/storagelib.lua")
+dofile("../Lib/config.lua")
+
+
+------------------------------------------------------------   
+--------------------VARIABLES TO CHANGE---------------------
+------------------------------------------------------------   
+-- Master loot list
+-- See Lib/Storagelib.lua for items types
+-- Change variables in your Lib/config.lua
+-- Currently Looting: Gold
+
+toLoot = {3821)
+
+
+
+------------------------------------------------------------   
+---------------------LOOTING FUNCTION-----------------------
+------------------------------------------------------------   
 
     function loot()      
     if UO.Weight > 420 then
