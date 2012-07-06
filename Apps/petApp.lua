@@ -1,3 +1,11 @@
+--==========================================================
+-- Script Name: Pet Application
+-- Author: McHale
+-- Version: 1.0
+-- OpenEUO version tested with: 0.91
+-- Purpose: Automates and Streamlines some pet tending 
+--==========================================================
+
 ---Jack Penny's Item Library
 dofile("../Lib/itemlib.lua")
 --Jack Penny's Menu Library

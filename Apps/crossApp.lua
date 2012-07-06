@@ -1,3 +1,11 @@
+--==========================================================
+-- Script Name: Cross Pollination Application
+-- Author: McHale
+-- Version: 1.0
+-- OpenEUO version tested with: 0.91
+-- Purpose: Helps with cross pollinating flowers
+--==========================================================
+
 dofile("../lib/itemlib.lua")
 dofile("../lib/menulib.lua")
 dofile("../Lig/config.lua")

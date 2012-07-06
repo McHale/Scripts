@@ -1,3 +1,11 @@
+--==========================================================
+-- Script Name: Resource Application
+-- Author: McHale
+-- Version: 1.0
+-- OpenEUO version tested with: 0.91
+-- Purpose: Manipulation of Various Resources
+--==========================================================
+
 dofile("../Lib/craftlib.lua")
 dofile("../Lib/itemlib.lua")
 dofile("../Lib/menuLib.lua")

@@ -1,3 +1,11 @@
+--==========================================================
+-- Script Name: Bod Application
+-- Author: McHale
+-- Version: 1.0
+-- OpenEUO version tested with: 0.91
+-- Purpose: Return Bod Rewards and Complete Bods
+--==========================================================
+
 dofile("../Lib/menulib.lua")
 dofile("../Lib/bodlib.lua")
 dofile("../Lib/craftlib.lua")

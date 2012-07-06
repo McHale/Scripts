@@ -1,3 +1,11 @@
+--==========================================================
+-- Script Name: Flower Application
+-- Author: McHale
+-- Version: 1.0
+-- OpenEUO version tested with: 0.91
+-- Purpose: Automates many flower tending functions
+--==========================================================
+
 dofile("../Lib/itemlib.lua")
 dofile("../Lib/basiclib.lua")
 dofile("../Lib/menulib.lua")

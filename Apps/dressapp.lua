@@ -1,3 +1,11 @@
+--==========================================================
+-- Script Name: Dress Application
+-- Author: McHale
+-- Version: 1.0
+-- OpenEUO version tested with: 0.91
+-- Purpose: To redress your character, when razor isn't working
+--==========================================================
+
 dofile("../Lib/itemlib.lua")
 dofile("../Lib/menulib.lua")
 

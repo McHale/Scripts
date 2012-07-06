@@ -1,4 +1,12 @@
-    -- House Decorator Helper
+--==========================================================
+-- Script Name: House Decorator Helper
+-- Author: McHale
+-- Version: 1.0
+-- OpenEUO version tested with: 0.91
+-- Purpose: Helps place items into hard to reach places
+--==========================================================
+  
+  -- House Decorator Helper
     -- by McHale of Excelsior's Orphan Mafia Guild
     -- v1.0 Completed 10/22/11 
     -- openEUO

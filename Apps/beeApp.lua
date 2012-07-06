@@ -1,3 +1,11 @@
+--==========================================================
+-- Script Name: Bee Tending Application
+-- Author: McHale
+-- Version: 1.0
+-- OpenEUO version tested with: 0.91
+-- Purpose: Tending and Harvesting Bee Hives
+--==========================================================
+
 dofile("../Lib/itemlib.lua")
 dofile("../Lib/basiclib.lua")
 dofile("../Lib/menulib.lua")

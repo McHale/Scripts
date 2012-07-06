@@ -1,3 +1,11 @@
+--==========================================================
+-- Script Name: Keg Application
+-- Author: McHale
+-- Version: 1.0
+-- OpenEUO version tested with: 0.91
+-- Purpose: Makes and Fills Kegs 
+--==========================================================
+
 dofile("../Lib/craftlib.lua")
 dofile("../Lib/menulib.lua")
 dofile("../Lib/itemlib.lua")
