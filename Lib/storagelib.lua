@@ -1,65 +1,75 @@
+--==================================
+-- Script Name: Storage Library
+-- Author: McHale
+-- Version: 1.0
+-- OpenEUO version tested with: 0.91
+-- Purpose: Common Functions to Store Items
+--==================================
+
 dofile("../Lib/itemlib.lua")
 dofile("../Lib/basiclib.lua")
 
--------------------------TO DO--------------------------
+-------------------------TODO--------------------------
 -- Finish adding tailoring types
 -- Add bag of holding to list of storage names[dont have one]
 -- Amend searching backpack to recursively check all containers
 -- Perhaps add grab resources functionality?
+-- Only checks main backpack
 
 ---------------------Storage Library--------------------
 
-    Storage = {}
-    local S = Storage
-    local next = next
+Storage = {}
+local S = Storage
+local next = next
 
 --------------------------------------------------------
 -------------------Gump Variables-----------------------
-    --Gump Sizes
-    local sizeX = 505
-    local sizeY = {475,270,440,270,295,325,365}
-    ---Runic house has just gotta be different
-    local rSizeX,rSizeY = 725,370
-    local rAddX,rAddY = 555,315
-    --Adding Items offset from gump
-    local addOffsetX = 290
-    local addOffsetY = {435,235,410,235,260,290,340}
-    --TO DO - offsets for grabbing resources
+--Gump Sizes
+local sizeX = 505
+local sizeY = {475,270,440,270,295,325,365}
+---Runic house has just gotta be different
+local rSizeX,rSizeY = 725,370
+local rAddX,rAddY = 555,315
+--Adding Items offset from gump
+local addOffsetX = 290
+local addOffsetY = {435,235,410,235,260,290,340}
+--TO DO - offsets for grabbing resources
 
 --------------------------------------------------------
 ----------Storage Container Key Name List---------------
-    ---The Index corresponds with the gump variables
-    S.storage_names = {"Spell Caster's Keys","Metal Worker's Keys",
-		"Tailor's Keys","Stone Worker's Keys","Wood Worker's Keys",
-		"Gem Pouch","Tool House", "Runic House","A Bag Of Sending","Huge Bag Of Holding"}
-	
-    local container_types = {5995,3705,3702,8900,2482}
+
+---The Index corresponds with the gump variables
+S.storage_names = {"Spell Caster's Keys","Metal Worker's Keys",
+	"Tailor's Keys","Stone Worker's Keys","Wood Worker's Keys",
+	"Gem Pouch","Tool House", "Runic House","A Bag Of Sending","Huge Bag Of Holding"}
+
+local container_types = {5995,3705,3702,8900,2482}
 
 --------------------------------------------------------
 -----------------Master Storage Type Lists--------------
-    ----Spell Caster Item Types
-    local sc_types = {3962,3963,3972,3973,3974,3976,3980,3981,3960,3983,
-		3965,3982,3978,3969,9911,9912,3966,3968,3827,3854,5154,
-		3620,2426,3615,7956,4586,6464,5995}
-    ----Metal Worker Item Types
-    local mw_types = {7154}
-    ----Stone Worker Item Types
-    local sw_types = {6009}
-    ----Wood Worker Item Types
-    -------3903, 7163 are arrows and bolts secondary list to not include those 2
-    local ww_types = {7127,7121,7133,3903,7163,7124}
-    local ww2_types = {7127, 7121, 7133, 7124}
-    ----still need to include tailor keys items!!!!
-    local tk_types = {4225,9908,3576}
-    ----Gem Item Types
-    local gem_types = {3885,3878,3859,3865,3873,3862,3856,7847,
-		3861,3877,12693,12695,12697,12692,12696,12690,12691,12694}
-    ----Tool House Item Types
-    ----taming brush, glassblowing, taxidermy kit
-    local tool_types = {3997, 3739, 4031, 4787, 4148, 4326, 4325, 4327,4136,
-    4130, 7864, 4027, 5092, 3897, 3718, 4020, 3908, 3907, 2431, 3909, 5110}
-    ----Runic Item Types
-    local runic_types = {7864, 5091, 3997, 4130, 4148}
+----Spell Caster Item Types
+local sc_types = {3962,3963,3972,3973,3974,3976,3980,3981,3960,3983,
+	3965,3982,3978,3969,9911,9912,3966,3968,3827,3854,5154,
+	3620,2426,3615,7956,4586,6464,5995}
+----Metal Worker Item Types
+local mw_types = {7154}
+----Stone Worker Item Types
+local sw_types = {6009}
+----Wood Worker Item Types
+-------3903, 7163 are arrows and bolts secondary list to not include those 2
+local ww_types = {7127,7121,7133,3903,7163,7124}
+local ww2_types = {7127, 7121, 7133, 7124}
+----still need to include tailor keys items!!!!
+local tk_types = {4225,9908,3576}
+----Gem Item Types
+local gem_types = {3885,3878,3859,3865,3873,3862,3856,7847,
+	3861,3877,12693,12695,12697,12692,12696,12690,12691,12694}
+----Tool House Item Types
+----taming brush, glassblowing, taxidermy kit
+local tool_types = {3997, 3739, 4031, 4787, 4148, 4326, 4325, 4327,4136,
+4130, 7864, 4027, 5092, 3897, 3718, 4020, 3908, 3907, 2431, 3909, 5110}
+----Runic Item Types
+local runic_types = {7864, 5091, 3997, 4130, 4148}
 
 
 --------------------------------------------------------
