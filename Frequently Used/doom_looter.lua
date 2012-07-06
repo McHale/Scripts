@@ -1,6 +1,7 @@
     dofile("../Lib/basiclib.lua")
     dofile("../Lib/itemlib.lua")
     dofile("../Lib/storagelib.lua")
+    dofile("../Lib/config.lua")
 
     ---------Variables to change--------------
     ---Master loot list
@@ -51,7 +52,7 @@
         end 
         looted = loots:pop(i)
         wait(100)
-        looted:drop(1076683851)   
+        looted:drop(bohID)   
     end
     -- claim them
    pop:say("[claim"):waitTarget()

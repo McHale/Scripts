@@ -1,6 +1,7 @@
-            dofile("../Lib/basiclib.lua")
+    dofile("../Lib/basiclib.lua")
     dofile("../Lib/itemlib.lua")
     dofile("../Lib/storagelib.lua")
+    dofile("../Lib/config.lua")
 
     ---------Variables to change--------------
     ---Master loot list
@@ -12,7 +13,6 @@
     ----this list to whatever you would like looted.
     weight = 420
     
-    boh = 1076683851
     ------------------------------------------------------------
     -- how to find corpses nearby and loots stuff from them
     -- and claim them
@@ -40,7 +40,7 @@
         end 
         looted = loots:pop(i)
         wait(100)
-        looted:drop(boh)   
+        looted:drop(bohID)   
     end
 
     -- claim them

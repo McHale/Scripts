@@ -1,19 +1,27 @@
+--==================================
+-- Script Name: Fire Champ Looter
+-- Author: McHale
+-- Version: 1.0
+-- OpenEUO version tested with: 0.91
+-- Purpose: Loots Gold, Gargoyle Pickaxe, Knife
+--==================================
 
     dofile("../Lib/basiclib.lua")
     dofile("../Lib/itemlib.lua")
     dofile("../Lib/storagelib.lua")
+    dofile("../Lib/config.lua")
 
-    ---------Variables to change--------------
-    ---Master loot list
-    ---Travesty keys 4110, 4111, 4112
-    ---Gold 3821
-    ----You can view the types in the storagelib and change
-    ----this list to whatever you would like looted.
+    -----------------------Variables to change------------------
+    -- Master loot list
+    -- See Lib/Storagelib.lua for items types
+    -- Change boh variable in Lib/config.lua to your bag of holding id.
+    -- Currently Looting pickaxe, skinning knife, and gold
+
     toLoot = {5110,3718,3821}
+    ------------------------------------------------------------   
 
 
 
-        local bohID = 1076683851
     ------------------------------------------------------------
     -- how to find corpses nearby and loots stuff from them
     -- and claim them
@@ -31,7 +39,6 @@
     --corpse = corpses:pop()
     loots = item:scan():cont(corpses:getIDs()):tp(toLoot)
     for i = 1,#loots do
-
         looted = loots:pop(i)
         wait(100)
         if looted.tp == 3821 then

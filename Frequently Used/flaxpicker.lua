@@ -1,8 +1,5 @@
 dofile("../Lib/itemlib.lua")
-
-------VARIABLES TO CHANGE------
---put your bag of holding id here
-local bohID = 1076683851
+dofile("../Lib/config.lua")
 
 --wait time between attempts to harvest a plant 
 -- currently set to 1 second
