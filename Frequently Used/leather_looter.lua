@@ -14,6 +14,7 @@ dofile("../Lib/basiclib.lua")
 dofile("../Lib/itemlib.lua")
 dofile("../Lib/storagelib.lua")
 dofile("../Lib/config.lua")
+dofile("../Lib/functions.lua")
 
 
 
@@ -37,7 +38,7 @@ KNIFE_TYPE = 5049
 ------------------------------------------------------------   
 backpack = item:scan():cont(UO.BackpackID):tp(KNIFE_TYPE)
 if next(backpack) == nil then
-	--UO.ExMsg for needing a skinning knife
+	errorMsg("You need a skinning knife in your backpack")
 	return
 else
 	knife = backpack:pop()
@@ -91,7 +92,7 @@ function loot()
 		   else
 			if UO.weight < MAX_WEIGHT then
 				looted:drop(UO.BackpackID)
-			else if BOS then
+			elseif BOS then
 				Storage.storeGoldBOS()
 			end
 		   end
@@ -105,7 +106,7 @@ function loot()
 		    			looted:drop(UO.BackpackID)
 				end
 			end
-		    else if STORAGE_KEYS then
+		    elseif STORAGE_KEYS then
 			Storage.storeAll()
 		    end
 		end   

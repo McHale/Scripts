@@ -2,6 +2,7 @@
     dofile("../Lib/itemlib.lua")
     dofile("../Lib/storagelib.lua")
     dofile("../Lib/menulib.lua")
+    dofile("../Lig/config.lua")
 
     ---------Variables to change--------------
     toLoot = {3535,7864,3968,5091,6585,3821,3625,8765,4130,7133,3821}
@@ -84,7 +85,7 @@ smeltB = eleApp:button("smelt",10,85,100,20,"Smelt Ore")
 lootB:onclick(function() loot() end)
 moveB:onclick(function() move() end)
 storeB:onclick(function() Storage.storeRunics() end)                
-smeltB:onclick(function() UO.ExMsg(UO.CharID,3,33,"Not implemented")  end)
+smeltB:onclick(function() errorMsg("Not implemented")  end)
 
 eleApp:show()
 Obj.Loop()

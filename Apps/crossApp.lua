@@ -1,5 +1,6 @@
 dofile("../lib/itemlib.lua")
 dofile("../lib/menulib.lua")
+dofile("../Lig/config.lua")
 
 ------------------------------
 --DEFAULT FLOWER INFORMATION--
@@ -267,7 +268,7 @@ if parentA == nil or parentA.id ~= parentB.id then
    plantBInfo = plantInfoString(parentB)
    loadListBox(plantBLB,plantBInfo) 
 else
-    UO.ExMsg(UO.CharID,3,33, "Self Pollination will not result in mutations or different plants.")
+    errorMsg( "Self Pollination will not result in mutations or different plants.")
 end
 end)
 
@@ -314,7 +315,7 @@ if parentA ~= nil and parentB ~= nil then
    end
    loadListBox(childrenLB, toLoad)
 else
-    UO.ExMsg(UO.CharID,3,33,"You need to select to different plants.")
+    errorMsg("You need to select to different plants.")
 end
 end)
 

@@ -24,7 +24,7 @@ books = nil
 function loadListBox(listbox,items)
 	listbox.ctrl.Clear()
 	if next(items) == nil then
-		UO.ExMsg(UO.CharID,3,33,"There are no runebooks in the selected container")
+		errorMsg("There are no runebooks in the selected container")
 		return
 	end
 	for i = 1, #items do
@@ -37,7 +37,7 @@ end
 --the items objects list returned by Jack Penny's itemlib
 function GetSelectedItem(listbox, items) 
         if next(items) == nil then
-	   UO.ExMsg(UO.CharID,3,33,"There are no items")
+	   errorMsg("There are no items")
            return 
         end
 	for i =0, #items-1 do
@@ -46,7 +46,7 @@ function GetSelectedItem(listbox, items)
 			return items:pop(i+1)
 		end
 	end
-	UO.ExMsg(UO.CharID,3,33,"No item is selected.")
+	errorMsg("No item is selected.")
 	return
 end
 
@@ -86,7 +86,7 @@ end
 
 function navigate(position)
 	if position == 0 then
-		UO.ExMsg(UO.CharID,3,33,"Failed to set location")
+		errorMsg("Failed to set location")
 		return
 	end
 	circle = math.floor(position/2) + position%2
@@ -107,7 +107,7 @@ function navigate(position)
 	Click.Gump(circleXOffset[circle],circleYOffset)
 	wait(500)
 	if yOffset == 0 then
-		UO.ExMsg(UO.CharID,3,33,"Please select a travel spell")
+		errorMsg("Please select a travel spell")
 		return
 	end
 	if position%2 == 1 then
@@ -116,7 +116,7 @@ function navigate(position)
 		xOffset = rightOffset
 	end		
 	if xOffset == 0 or yOffset == 0 then
-	   UO.ExMsg(UO.CharID,3,33,"Error setting offset")
+	   errorMsg("Error setting offset")
            return
         end   
         Click.Gump(xOffset,yOffset)

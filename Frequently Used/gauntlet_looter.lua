@@ -32,44 +32,44 @@ toLoot = {3821)
 ---------------------LOOTING FUNCTION-----------------------
 ------------------------------------------------------------   
 
-    function loot()      
-    if UO.Weight > 420 then
-       local gold = item:scan():cont(UO.BackpackID):tp(3821)
-       gold:pop():drop(boh)
-    end
-    -- find corpses
-    corpses = item:scan():ground(2):tp({8198})
-    local next = next
-    if next(corpses) == nil then
-	return
-    end
+function loot()      
+	corpses = item:scan():ground(2):tp({8198})
+	local next = next
+	if next(corpses) == nil then
+	
+		return
+	end
 
+	loots = item:scan():cont(corpses:getIDs()):tp(3821)--:property():name("Myrmidon Armor")
 
-    -- search for gold + oints and loot them
-    loots = item:scan():cont(corpses:getIDs()):tp(3821)--:property():name("Myrmidon Armor")
-    
-    for i = 1,#loots do
-        if UO.Weight > weight then
-             UO.ExMsg(UO.CharID,3,50, "Storing...please hold from using gumps for a few moments")
-        end 
-        looted = loots:pop(i)
-        wait(100)
-        looted:drop(bohID)   
-    end
+	for i = 1,#loots do
+		if UO.Weight > MAX_WEIGHT then
+			local gold = item:scan():cont(UO.BackpackID):tp(3821)
+			gold = gold:pop()
+			if BOH then
+				gold:drop(BOH_ID)
+			elseif BOS then
+				gold:drop(BOS_ID)
+			end
+		end
+		looted = loots:pop(i)
+		wait(100)
+		if BOH then
+			looted:drop(BOH_ID)
+		else
+			loot:drop(UO.BackpackID)
+		end   
+	end
 
-    -- claim them
-    pop:say("[claim"):waitTarget()
+	pop:say("[claim"):waitTarget()
 
-    for i = 1,#corpses do
-        corpses:pop(i):target():waitTarget()
-    end
-    UO.Key("ESC")
-    end
+	for i = 1,#corpses do
+	corpses:pop(i):target():waitTarget()
+	end
+	UO.Key("ESC")
+end
 
-    -----Loops constantly
-    -----I cannot use hotkeys in linux
-    ----so its not currently implemented.
-    while true do
-        loot()
-        wait(1500)
-    end
+while true do
+	loot()
+	wait(1500)
+end

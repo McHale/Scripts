@@ -1,6 +1,7 @@
 dofile("../Lib/itemlib.lua")
 dofile("../Lib/basiclib.lua")
 dofile("../Lib/menulib.lua")
+dofile("../Lig/config.lua")
 
 function setPrice(price)
 	for char in price:gmatch"." do
@@ -24,13 +25,13 @@ function stockBODBooks(bod_type)
 	end
 	local books = item:scan():cont(UO.BackpackID):tp(8793):property():name(book_name)
 	if next(books) == nil then
-   		UO.ExMsg(UO.CharID,3,33,'You have no BOD BOOKS')
+   		errorMsg('You have no BOD BOOKS')
 		return
 	end
 
 	local bodDyeTub = item:scan():cont(UO.BackpackID):tp(4011):property():name("BOD Book Dyetub")
 	if next(bodDyeTub) == nil then
-   		UO.ExMsg(UO.CharID,3,33,"You don't have a BOD Book Dyetub")
+   		errorMsg("You don't have a BOD Book Dyetub")
 	end
 	bodDyeTub = bodDyeTub:pop()
 
@@ -50,7 +51,7 @@ end
 function stockItem(item_tp, container,price)
 	local items = item:scan():cont(UO.BackpackID):tp(item_tp)
 	if next(items) == nil then
-		UO.ExMsg(UO.CharID,3,33,"No Items to stock")
+		errorMsg("No Items to stock")
 		return
 	end
 	for i = 1, #items do
@@ -63,7 +64,7 @@ end
 function stockRunebooks()
 	local runebooks = item:scan():cont(UO.BackpackID):tp(8901)
 	if next(runebooks) == nil then
-		UO.ExMsg(UO.CharID,3,33,"You have no runebooks to restock")
+		errorMsg("You have no runebooks to restock")
 		return
 	end
 	for i =1, #runebooks do

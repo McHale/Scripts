@@ -2,6 +2,7 @@ dofile("../Lib/itemlib.lua")
 dofile("../Lib/basiclib.lua")
 dofile("../Lib/menulib.lua")
 dofile("../Lib/journallib.lua")
+dofile("../Lig/config.lua")
 
 local flower_types = {3203,3206,3208,3220,3211,3237,3239,3223,3231,3238,3328,3377,3332,3241,3372,3366,3367}
 

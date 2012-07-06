@@ -3,6 +3,7 @@ dofile("../Lib/basiclib.lua")
 dofile("../Lib/menulib.lua")
 dofile("../Lib/journallib.lua")
 dofile("../Lib/craftlib.lua")
+dofile("../Lig/config.lua")
 
 tHour, tMinute, tSecond, tMillisec = gettime()
 

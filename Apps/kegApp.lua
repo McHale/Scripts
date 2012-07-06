@@ -2,13 +2,14 @@ dofile("../Lib/craftlib.lua")
 dofile("../Lib/menulib.lua")
 dofile("../Lib/itemlib.lua")
 dofile("../Lib/storagelib.lua")
+dofile("../Lig/config.lua")
 
 function makeKeg()
 	local next = next
 	--check boards present
 	local boards = item:scan():cont(UO.BackpackID):tp(7127)
 	if next(boards) == nil then 
-		UO.ExMsg(UO.CharID,3,33,"You don't have any boards")
+		errorMsg("You don't have any boards")
 		return
 	end
 	--check boards amount
@@ -16,13 +17,13 @@ function makeKeg()
 	local board = boards:pop()
 	s,e,amt = string.find(board.name, "(%d+) Board")
 	if tonumber(amt) < 23 then
-		UO.ExMsg(UO.CharID,3,33,"You don't have enough natural boards")
+		errorMsg("You don't have enough natural boards")
                 return
 	end
 	--check ingots present
 	local ingots = item:scan():cont(UO.BackpackID):tp(7154)
 	if next(ingots) == nil then 
-		UO.ExMsg(UO.CharID,3,33,"You don't have any ingots")
+		errorMsg("You don't have any ingots")
 		return
 	end
 	--check ingots amount
@@ -30,13 +31,13 @@ function makeKeg()
 	local ingot = ingots:pop()
 	s,e,amt = string.find(ingot.name,"(%d+) Ingots")
 	if tonumber(amt) < 9 then
-		UO.ExMsg(UO.CharID,3,33,"You don't have enough iron ingots")
+		errorMsg("You don't have enough iron ingots")
 		return
 	end
 	--check saw present
 	local saws = item:scan():cont(UO.BackpackID):tp(4148)
 	if next(saws) == nil then
-		UO.ExMsg(UO.CharID,3,33,"You don't have a saw")
+		errorMsg("You don't have a saw")
 		return
 	end	
 	saws:property()	
@@ -48,13 +49,13 @@ function makeKeg()
                 saw_amount = saw_amount+tonumber(use)
 	end
 	if saw_amount < 6 then
-		UO.ExMsg(UO.CharID,3,33,"You don't have enough saw uses")
+		errorMsg("You don't have enough saw uses")
 		return
 	end	
 	--check tink kit present
 	local kits = item:scan():cont(UO.BackpackID):tp(7864)
 	if next(kits) == nil then
-		UO.ExMsg(UO.CharID,3,33,"You don't have a tink kit")
+		errorMsg("You don't have a tink kit")
 		return
 	end
 	kits:property()
@@ -66,13 +67,13 @@ function makeKeg()
 		kit_amount = kit_amount+tonumber(use)
 	end
 	if kit_amount < 3 then
-		UO.ExMsg(UO.CharID,3,33,"You don't have enough tink kit uses")
+		errorMsg("You don't have enough tink kit uses")
 		return
 	end	
 	--check bottles present
 	local bottles = item:scan():cont(UO.BackpackID):tp(3854)
 	if next(bottles) == nil then 
-		UO.ExMsg(UO.CharID,3,33,"You don't have any bottles")
+		errorMsg("You don't have any bottles")
 		return
 	end
 	--check bottles amount
@@ -80,11 +81,11 @@ function makeKeg()
 	local bottle = bottles:pop()
 	s,e,amt = string.find(bottle.name,"(%d+) Empty Bottle")
 	if amt == nil then
-		UO.ExMsg(UO.CharID,3,33,"You don't have enough empty bottles")
+		errorMsg("You don't have enough empty bottles")
 		return
 	end
 	if tonumber(amt) < 10 then
-		UO.ExMsg(UO.CharID,3,33,"You don't have enough empty bottles")
+		errorMsg("You don't have enough empty bottles")
 		return
 	end
 	
@@ -112,13 +113,13 @@ end
 function greaterCure()
 	container = item:scan():ground(1):property():name("Cure Potion Kegs")
 	if next(container) == nil then 
-		UO.ExMsg(UO.CharID,3,33,"Not Near Your Cure Keg Storage")
+		errorMsg("Not Near Your Cure Keg Storage")
 		return
 	end
 	container = container:pop()
 	local kegs = item:scan():cont(container.id):property():name("An Empty Potion Keg")
 	if next(kegs) == nil then
-		UO.ExMsg(UO.CharID,3,33,"You do not have empty kegs for cure in storage")
+		errorMsg("You do not have empty kegs for cure in storage")
 		return
 	end
 	for i=1,#kegs do
@@ -128,7 +129,7 @@ function greaterCure()
 		wait(200)
 		local potions = item:scan():cont(UO.BackpackID):tp(3847)
 		if next(potions) == nil then
-			UO.ExMsg(UO.CharID,3,33,"Failed to make cure potion")
+			errorMsg("Failed to make cure potion")
 		end
 		keg:drop(UO.BackpackID)
 		potions:pop():drop(keg.id)
@@ -142,13 +143,13 @@ end
 function greaterAgility()
 	container = item:scan():ground(1):property():name("Agility Potion Kegs")
 	if next(container) == nil then 
-		UO.ExMsg(UO.CharID,3,33,"Not Near Your Agility Keg Storage")
+		errorMsg("Not Near Your Agility Keg Storage")
 		return
 	end
 	agi_container = container:pop()
 	local kegs = item:scan():cont(container.id):property():name("An Empty Potion Keg")
 	if next(kegs) == nil then
-		UO.ExMsg(UO.CharID,3,33,"You do not have empty kegs for agi in storage")
+		errorMsg("You do not have empty kegs for agi in storage")
 		return
 	end
 	for i=1,#kegs do
@@ -158,7 +159,7 @@ function greaterAgility()
 		wait(200)
 		local potions = item:scan():cont(UO.BackpackID):tp(3848)
 		if next(potions) == nil then
-			UO.ExMsg(UO.CharID,3,33,"Failed to make agility potion")
+			errorMsg("Failed to make agility potion")
 		end
 		keg:drop(UO.BackpackID)
 		potions:pop():drop(keg.id)
@@ -172,13 +173,13 @@ end
 function greaterPoison()
 	container = item:scan():ground(1):property():name("Poison Potion Kegs")
 	if next(container) == nil then 
-		UO.ExMsg(UO.CharID,3,33,"Not Near Your poison Keg Storage")
+		errorMsg("Not Near Your poison Keg Storage")
 		return
 	end
 	container = container:pop()
 	local kegs = item:scan():cont(container.id):property():name("An Empty Potion Keg")
 	if next(kegs) == nil then
-		UO.ExMsg(UO.CharID,3,33,"You do not have empty kegs for poison in storage")
+		errorMsg("You do not have empty kegs for poison in storage")
 		return
 	end
 	for i=1,#kegs do
@@ -188,7 +189,7 @@ function greaterPoison()
 		wait(200)
 		local potions = item:scan():cont(UO.BackpackID):tp(3850)
 		if next(potions) == nil then
-			UO.ExMsg(UO.CharID,3,33,"Failed to make poison potion")
+			errorMsg("Failed to make poison potion")
 		end
 		keg:drop(UO.BackpackID)
 		potions:pop():drop(keg.id)
@@ -202,13 +203,13 @@ end
 function greaterHeal()
 	container = item:scan():ground(1):property():name("Heal Potion Kegs")
 	if next(container) == nil then 
-		UO.ExMsg(UO.CharID,3,33,"Not Near Your heal Keg Storage")
+		errorMsg("Not Near Your heal Keg Storage")
 		return
 	end
 	container = container:pop()
 	local kegs = item:scan():cont(container.id):property():name("An Empty Potion Keg")
 	if next(kegs) == nil then
-		UO.ExMsg(UO.CharID,3,33,"You do not have empty kegs for heal in storage")
+		errorMsg("You do not have empty kegs for heal in storage")
 		return
 	end
 	for i=1,#kegs do
@@ -218,7 +219,7 @@ function greaterHeal()
 		wait(200)
 		local potions = item:scan():cont(UO.BackpackID):tp(3852)
 		if next(potions) == nil then
-			UO.ExMsg(UO.CharID,3,33,"Failed to make heal potion")
+			errorMsg("Failed to make heal potion")
 		end
 		keg:drop(UO.BackpackID)
 		potions:pop():drop(keg.id)
@@ -242,7 +243,7 @@ cureB:onclick(function() greaterCure() end)
 poisonB:onclick(function() greaterPoison() end)
 agilityB:onclick(function() greaterAgility() end)
 healB:onclick(function() greaterHeal() end)
-finishB:onclick(function() UO.ExMsg(UO.CharID,3,33,"Needs to be implemented") end)
+finishB:onclick(function() errorMsg("Needs to be implemented") end)
 makeB:onclick(function() makeKeg() end)
 
 kegApp:show()

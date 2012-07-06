@@ -1,6 +1,7 @@
 dofile("../Lib/craftlib.lua")
 dofile("../Lib/itemlib.lua")
 dofile("../Lib/menuLib.lua")
+dofile("../Lig/config.lua")
 
 local bohID = 1076683851
 
@@ -83,13 +84,13 @@ function spin()
 
 	to_spin = item:scan():cont(storage_id):tp({6812,3576,3577}):pop()
 	if next(to_spin) == nil then
-		UO.ExMsg(UO.CharID,3,33,"Nothing to spin")
+		errorMsg("Nothing to spin")
 		return
 	end
 		
 	spinning_wheels = item:scan():ground(4):tp({11737,4121,4117})
 	if next(spinning_wheels) == nil then
-		UO.ExMsg(UO.CharID,3,33,"No Spinning Wheels within 4 tiles.")
+		errorMsg("No Spinning Wheels within 4 tiles.")
 		return
 	end
 
@@ -116,13 +117,13 @@ function weave()
 
 	to_weave = item:scan():cont(storage_id):tp({3613,4000}):pop()
 	if next(to_weave) == nil then
-		UO.ExMsg(UO.CharID,3,33,"Nothing to Weave")
+		errorMsg("Nothing to Weave")
 		return
 	end
 
 	loom = item:scan():ground(1):tp({4191,4192}):pop()
 	if next(loom) == nil then
-		UO.ExMsg(UO.CharID,3,33,"No Loom within 1 tile")
+		errorMsg("No Loom within 1 tile")
 		return
 	end
 

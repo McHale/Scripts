@@ -14,7 +14,11 @@ function move()
          if next(resources) ~= nil then
             for i = 1, #resources do
                 local resource = resources:pop(i)
-                resource:drop(bohID)
+		if BOH then
+                	resource:drop(BOH_ID)
+		else
+			--need to prompt user to drop elsewhere
+		end
                 wait(250)
             end
          end
@@ -48,9 +52,9 @@ function collectAll()
                while not zero(flax) do
 	             wait(10)
                end
-               harvest(flax)
-               --move()
 
+               harvest(flax)
+		move()
 	       flax_plants = remove(flax_plants, flax)
 	
                if #flax_plants < 1 then

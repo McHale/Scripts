@@ -2,7 +2,7 @@
     dofile("../Lib/basiclib.lua")
     dofile("../Lib/storagelib.lua")
     dofile("../Lib/menulib.lua")
-
+dofile("../Lig/config.lua")
 
     ---------Variables to change--------------
     ---Master loot list
@@ -34,7 +34,7 @@
     treasure = item:scan():ground(2):tp(3648)
     local next = next
     if next(treasure) == nil then
-        UO.ExMsg(UO.CharID,3,33,"There are no treasure chests")
+        errorMsg("There are no treasure chests")
 	return
     end
     chest = treasure:pop()

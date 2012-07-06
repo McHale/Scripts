@@ -5,6 +5,7 @@
 
 dofile("../Lib/menulib.lua")
 dofile("../Lib/itemlib.lua")
+dofile("../Lig/config.lua")
 
 -------------------------------START HELPER FUNCTIONS--------------------------
 
@@ -33,14 +34,14 @@ end
 --function to place the selected item
 function place(listbox, items)
           if next(items) == nil then
-             UO.ExMsg(UO.CharID,3,33,"No Items in container.")
+             errorMsg("No Items in container.")
              return
           end
 	  local index = GetSelectedIndex(listbox, items)
 	  if index > -1 then    
 	    myItem = items:pop(index+1)
           else
-		UO.ExMsg(UO.CharID,3,33,"No item is selected.")
+		errorMsg("No item is selected.")
 		return
  	  end
 	  UO.ExMsg(UO.CharID,3,16,"Please select a tile to place your item.")
@@ -73,7 +74,7 @@ itemsLB.ctrl.MultiSelect = false
 --Scans Main Backpack for a container called "Place"
 local my_cont = item:scan():cont(UO.BackpackID):property():name("Place")
 if next(my_cont) == nil then 
-   UO.ExMsg(UO.CharID,3,33,"You must have a container renamed 'Place' in your Main Backpack.")
+   errorMsg("You must have a container renamed 'Place' in your Main Backpack.")
    UO.ExMsg(UO.CharID,3,50,"Stopping Script...")
    stop()
 end

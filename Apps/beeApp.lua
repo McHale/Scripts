@@ -1,7 +1,7 @@
 dofile("../Lib/itemlib.lua")
 dofile("../Lib/basiclib.lua")
 dofile("../Lib/menulib.lua")
-
+dofile("../Lig/config.lua")
 -----------BEE LIST----------
 local potions = {"Agility","Poison","Cure","Heal","Strength"}
 local potionPresent = {1,1,1,1,1}
@@ -124,7 +124,7 @@ potionPresent = {1,1,1,1,1}
 bee_hives = item:scan():ground(2):tp(2330):property()
 local next = next
 if next(bee_hives) == nil then
-	UO.ExMsg(UO.CharID,3,33,"You are not near any bees.")
+	errorMsg("You are not near any bees.")
 end
 for i=1,#bee_hives do
     local hive =bee_hives:pop(i)
@@ -175,18 +175,18 @@ end
 
 function collectHoney()
 if not checkTools(2549) then
-	UO.ExMsg(UO.CharID,3,33,"No Hive Tool")
+	errorMsg("No Hive Tool")
 	return
 end
 local oldBottles = checkTools(3854)
 if not oldBottles then
-	UO.ExMsg(UO.CharID,3,33,"No Empty Bottles")
+	errorMsg("No Empty Bottles")
 	return
 end
 bee_hives = item:scan():ground(2):tp(2330):property()
 local next = next
 if next(bee_hives) == nil then
-	UO.ExMsg(UO.CharID,3,33,"You are not near any bees.")
+	errorMsg("You are not near any bees.")
 end
 	for i=1,#bee_hives do
 	    local bee_hive =bee_hives:pop(i)
@@ -199,18 +199,18 @@ end
 	    		Click.Gump(210,155)
 	    		wait(500)
 			if not checkTools(2549) then
-				UO.ExMsg(UO.CharID,3,33,"No Hive Tool")
+				errorMsg("No Hive Tool")
 				Click.CloseGump()
 				return
 			end
 			local bottles = checkTools(3854)
 			if not bottles then
-				UO.ExMsg(UO.CharID,3,33,"No Empty Bottles")
+				errorMsg("No Empty Bottles")
 				Click.CloseGump()
 				return
 			end	
 			if oldBottles.name == bottles.name then
-				UO.ExMsg(bee_hive.id,3,33,"Emptied Hive")
+				UO.ExMsg(bee_hive.id,3,40,"Emptied Hive")
 				canCollect = false
 				Click.CloseGump()
 			else
@@ -230,7 +230,7 @@ honeyB = beeApp:button("honey",50,35,100,20,"Collect Honey")
 
 potionB:onclick(function() potion() end)
 honeyB:onclick(function() collectHoney() end)
---waxB:onclick(function() UO.ExMsg(UO.CharID,3,33,"Not Implemented") end)
+--waxB:onclick(function() errorMsg("Not Implemented") end)
 
 beeApp:show()
 Obj.Loop()

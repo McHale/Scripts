@@ -54,7 +54,7 @@ function loot()
 		   else
 			if UO.weight < MAX_WEIGHT then
 				looted:drop(UO.BackpackID)
-			else if BOS then
+			elseif BOS then
 				Storage.storeGoldBOS()
 			end
 		   end
@@ -62,7 +62,7 @@ function loot()
 		else
                     if UO.weight < MAX_WEIGHT then
 		    	looted:drop(UO.BackpackID)
-		    else if STORAGE_KEYS then
+		    elseif STORAGE_KEYS then
 			Storage.storeAll()
 		    end
 		end   

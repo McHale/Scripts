@@ -2,6 +2,7 @@
 dofile("../Lib/itemlib.lua")
 --Jack Penny's Menu Library
 dofile("../Lib/menulib.lua")
+dofile("../Lig/config.lua")
 
 function getFollowers()
 	--Scans the ground in a radius of 1, and grabs 1-Innocent[for unguilded] 
@@ -15,7 +16,7 @@ function getFollowers()
             end
         end
        	if #followers == 0 then 
-           UO.ExMsg(UO.CharID,3,33,"Followers are not out, or not close enough")
+           errorMsg("Followers are not out, or not close enough")
 	   stop()
 	end
 	return followers

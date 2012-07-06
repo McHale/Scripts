@@ -3,8 +3,9 @@ dofile("../Lib/bodlib.lua")
 dofile("../Lib/craftlib.lua")
 dofile("../Lib/itemlib.lua")
 dofile("../Lib/basiclib.lua")
+dofile("../Lib/functions.lua")
 
------------------GLOBAL VARIABLES---------------
+-----------------LOCAL VARIABLES---------------
 local myBod = false
 
 ------------------------------------------------
@@ -14,16 +15,16 @@ function doBod()
 
 	myBod = bod:scanBod()
 	if not myBod then 
-		UO.ExMsg(UO.CharID,3,33,"You have no bods")
+		errorMsg("You have no bods")
    		return false
 	end
 
 	if myBod.size ~= "Small Bod" then
-		UO.ExMsg(UO.CharID,3,33,"This is not a small bod.")
+		errorMsg("This is not a small bod.")
    		return false
 	end
         if myBod:Complete() then
-	   UO.ExMsg(UO.CharID,3,33,"This Bod was alread completed")
+	   errorMsg("This Bod was alread completed")
 	   return false
          end
 
@@ -44,7 +45,7 @@ function doBod()
 	local category = myBod:craftCategory()
 
 	if index == nil or category == nil then
-   		UO.ExMsg(UO.CharID,3,33,"Error setting item index for crafting gump")
+   		errorMsg("Error setting item index for crafting gump")
 	   	return false
 	end         
 
@@ -58,7 +59,7 @@ function doBod()
 
 	local toAdd = item:scan():cont(UO.BackpackID):tp(Craft.LastItemType)
 	if next(toAdd) == nil then
-   		UO.ExMsg(UO.CharID,3,33,"Failed to add items/Missing Materials")
+   		errorMsg("Failed to add items/Missing Materials")
 	   	return false
 	end
 
