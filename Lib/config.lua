@@ -10,9 +10,8 @@ MAX_WEIGHT = 420
 
 --|||COMMON ITEM IDS||--
 BOH_ID = 1076683851
-TRASH_D = "{put your trash bag id here}"
+TRASH_ID = "{put your trash bag id here}"
 LOOT_BAG_ID = "{put your loot bag id here}"
 BOS_ID = "{put your bag of sending id here}"
 DEFAULT_RUNEBOOK_ID = "{put your default runebook id here}"
-
 

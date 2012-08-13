@@ -9,7 +9,7 @@
 dofile("../Lib/craftlib.lua")
 dofile("../Lib/itemlib.lua")
 dofile("../Lib/menuLib.lua")
-dofile("../Lig/config.lua")
+dofile("../Lib/config.lua")
 
 local bohID = 1076683851
 
@@ -149,5 +149,4 @@ function weave()
 	      wait(275)
 	end
 end
-
-weave()
+ destroyItems("smith")

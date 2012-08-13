@@ -224,6 +224,23 @@ function menu:scrollbar(id,x,y,w,h,minVal,maxVal,pos)
     self[id] = a
     return a
 end
+
+function menu:tabcontrol(id,x,y,w,h,tabs)
+    local a = {}
+    a.ctrl = Obj.Create("TTabControl")
+    
+    a.ctrl.Parent = self.ctrl
+    a.ctrl.Left = x
+    a.ctrl.Top = y
+    a.ctrl.Width = w
+    a.ctrl.Height = h
+    a.ctrl.Tabs = tabs
+    
+    setmetatable(a,menu_meta)
+    self[id] = a
+    return a
+end
+
 -- functions to customize created menu objects
 
 function menu:back() -- sends object to background

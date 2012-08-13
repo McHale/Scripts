@@ -4,7 +4,7 @@
 
 dofile("../Lib/storagelib.lua")
 dofile("../Lib/menulib.lua")
-dofile("../Lig/config.lua")
+dofile("../Lib/config.lua")
 
  --creates a 400x200 window with title "My test menu"
 storeApp = menu:form(200,250,"Storage")
