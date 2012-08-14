@@ -234,11 +234,39 @@ function menu:tabcontrol(id,x,y,w,h,tabs)
     a.ctrl.Top = y
     a.ctrl.Width = w
     a.ctrl.Height = h
-    a.ctrl.Tabs = tabs
+    for i = 1 , #tabs do
+       a.ctrl.Tabs.Add(tabs[i])
+    end
     
     setmetatable(a,menu_meta)
     self[id] = a
     return a
+end
+
+function menu:save(id,ext,dir,title)
+    local a = {}
+    a.ctrl = Obj.Create("TSaveDialog")
+    
+    a.ctrl.Parent = self.ctrl
+    a.crtl.DefaultExt = ext
+    a.ctrl.Title  = title
+    
+    setmetatable(a,menu_meta)
+    self[id] = a
+    return a 
+end
+
+function menu:open()
+    local a = {}
+    a.ctrl = Obj.Create("TOpenDialog")
+    
+    a.ctrl.Parent = self.ctrl
+    a.crtl.DefaultExt = ext
+    a.ctrl.Title  = title
+    
+    setmetatable(a,menu_meta)
+    self[id] = a
+    return a 
 end
 
 -- functions to customize created menu objects
