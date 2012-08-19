@@ -69,7 +69,7 @@ function menu:checkbox(id,x,y,w,h,name)
     return a
 end
 
-function menu:combobox(id,x,y,w,h)
+function menu:combobox(id,x,y,w,h,items)
     local a = {}
     a.ctrl = Obj.Create("TComboBox")
     
@@ -78,6 +78,9 @@ function menu:combobox(id,x,y,w,h)
     a.ctrl.Top = y
     a.ctrl.Width = w
     a.ctrl.Height = h
+    for i = 1 , #tabs do
+       a.ctrl.Items.Add(items[i])
+    end
     
     setmetatable(a,menu_meta)
     self[id] = a

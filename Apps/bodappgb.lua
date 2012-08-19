@@ -49,7 +49,7 @@ function setBodBook()
  
         bodbooks:property()
         bodbook = bodbooks:pop()
-        msgL.ctrl.Caption = getName(bodbook)
+        return getName(bodbook)
 end
 
 function setPrice()
@@ -148,10 +148,9 @@ end
 ---------------------------------------------------------
 local app_title = "Bod App Suite"
 local length , width = 500 , 300
-local tab_strings = {"One Click","Price","Macros","Sort"}
+local tab_strings = {"One Click","Price","Sort","Macros"}
 
         --More Complex Gui Variable Settings--
---local tab_dict = {"One Click":{fillB,,"Price":{bodBookB,msgL,priceE,priceL,priceB},"Macros","Sort"}
 
 x_pos , y_pos = 20,50
 btn_x , btn_y = 250,20
@@ -213,33 +212,6 @@ function getSelectedIndices(listbox, items)
 end
 
 ---------------------------------------------------------
---------------------------PRICE--------------------------
----------------------------------------------------------
-function initPriceTab()
-    x_pos , y_pos = 80,50
-    btn_x , btn_y = 60,20
-    col_x_offset, col_y_offset = 0, 30
-
-    bodBookB = bodApp:button("bodbook",x_pos,y_pos,btn_x*2,btn_y,"Set Bulk Order Book")
-    x_pos, y_pos = updateOffsets(false,true)
-    msgL = bodApp:label("msg",x_pos,y_pos,btn_x,btn_y,"No Bulk Order Book Set")
-    x_pos, y_pos = updateOffsets(false,true)
-    priceL = bodApp:label("price",x_pos,y_pos,btn_x,btn_y,"Bod Price: ")
-    col_y_offset = 5
-    col_x_offset = 45
-    x_pos, y_pos = updateOffsets(false,true)
-    priceE = bodApp:edit("input",x_pos,y_pos,btn_x,btn_y,"")
-    col_y_offset = 20
-    x_pos, y_pos = updateOffsets(false,true)
-    priceB = bodApp:button("run", x_pos,y_pos,btn_x*2,btn_y,"Price Bulk Order Deeds")
-
-    bodBookB:onclick(function() setBodBook() end)
-    priceB:onclick(function() run() end)
-
-    elements = {bodBookB,msgL,priceE,priceL,priceB}
-end
-
----------------------------------------------------------
 ------------------------ONE CLICK------------------------
 ---------------------------------------------------------
 
@@ -260,6 +232,26 @@ function initOneClickTab()
 end
 
 ---------------------------------------------------------
+--------------------------PRICE--------------------------
+---------------------------------------------------------
+function initPriceTab()
+    x_pos , y_pos = 70,50
+    btn_x , btn_y = 150,20
+    col_x_offset, col_y_offset = 0, 30
+
+    bodBookB = bodApp:button("bodbook",x_pos,y_pos,btn_x,btn_y,"Set Bulk Order Book")
+    x_pos, y_pos = updateOffsets(false,true)
+    msgE = bodApp:edit("msg",x_pos,y_pos,btn_x,btn_y,"No Bulk order book set.")
+    x_pos, y_pos = updateOffsets(false,true)
+    priceE = bodApp:edit("input",x_pos,y_pos,btn_x,btn_y,"Enter the price here.")    
+    x_pos, y_pos = updateOffsets(true,true)
+    priceB = bodApp:button("run", x_pos,y_pos,btn_x,btn_y,"Price Bulk Order Deeds")
+
+    bodBookB:onclick(function() msgE.ctrl.Text = setBodBook() end)
+    priceB:onclick(function() run() end)
+end
+
+---------------------------------------------------------
 ---------------------------BLOB--------------------------
 ---------------------------------------------------------
 function initBlobTab()
@@ -268,17 +260,13 @@ function initBlobTab()
     col_x_offset = x_pos+btn_x+10
     col_y_offset = btn_y+5
 
-    bookLB = bodApp:listbox("items",x_pos,y_pos,btn_x,btn_y*3)
+    bookLB = bodApp:listbox("items",x_pos+btn_x/2,y_pos,btn_x/2,btn_y*3)
     bookLB.ctrl.MultiSelect = false
     books = bod_books:scan():book_names()
     loadListBox(bookLB, books)
     col_y_offset = btn_y*3+10
     x_pos, y_pos = updateOffsets(false,true)
     col_y_offset = btn_y + 10
-
-    emptyB = bodApp:button("empty",x_pos,y_pos,btn_x,btn_y,"Empty Bod Book")
-    x_pos, y_pos = updateOffsets(false,true)
-    typeB = bodApp:button("type",x_pos,y_pos,btn_x/4,btn_y,"Type")
 
     sort_x_pos = x_pos
     bowyerRB = bodApp:radiobutton("bowyer",sort_x_pos,y_pos,btn_x/4,btn_y,"Bowyer")
@@ -291,10 +279,10 @@ function initBlobTab()
     tailorRB = bodApp:radiobutton("tailor",sort_x_pos,y_pos,btn_x/4,btn_y,"Tailor")
     x_pos, y_pos = updateOffsets(false,true)
 
-    crossCB = bodApp:checkbox("cross",15,y_pos,btn_x,btn_y,"Include Small Fitting Bods in Reward Tier Bods")
+    crossCB = bodApp:checkbox("cross",x_pos,y_pos,btn_x,btn_y,"Include Small Fitting Bods in Reward Tier Bods")
     x_pos, y_pos = updateOffsets(false,true)
 
-    sort_x_pos = 7   
+    sort_x_pos = 15
     tierB = bodApp:button("tier",sort_x_pos,y_pos,btn_x/3,btn_y,"Tier")
     sort_x_pos =sort_x_pos + btn_x/3 + 5
     sizeB = bodApp:button("size",sort_x_pos,y_pos,btn_x/3,btn_y,"Size")
@@ -302,15 +290,11 @@ function initBlobTab()
     resourceB = bodApp:button("resource",sort_x_pos,y_pos,btn_x/3,btn_y,"Resource")
     x_pos, y_pos = updateOffsets(false,true)
 
-    filterLB = bodApp:listbox("filters",x_pos,y_pos,btn_x,btn_y*3)
+    filterLB = bodApp:listbox("filters",x_pos,y_pos,btn_x,btn_y*5)
     filterLB.ctrl.MultiSelect = true
-    col_y_offset = btn_y*3+10
+    col_y_offset = btn_y*5+10
     x_pos, y_pos = updateOffsets(false,true)
     col_y_offset = btn_y + 10
-
-    print(length-200)
-    print(y_pos)
-    filterGB.ctrl.Height = length-200
 end
 
 function getSelectedProfession()
@@ -328,21 +312,25 @@ bodApp = menu:form(width,length,app_title)
 
 tabs = bodApp:tabcontrol("tabs",10,10,width-width/10,length-length/10,tab_strings)
 initOneClickTab()
-
+exitB = bodApp:button("exit",220,430,50,20,"Exit"):onclick(function() Obj.Exit() end)
 tabs:onchange(
 function()
 
     hideCurrentElements()
 
     if tabs.ctrl.TabIndex == 0 then
-        elements = {fillB, rewardB, referenceB}
+        elements = { fillB , rewardB , referenceB }
     elseif tabs.ctrl.TabIndex == 1 then
-        if not bodBookB then initPriceTab()
-        else elements = {bodBookB,msgL,priceE,priceL,priceB} end
+        if not bodBookB then initPriceTab() end
+        
+        elements = { bodBookB , msgE , priceE , priceB }
     elseif tabs.ctrl.TabIndex == 2 then
-        initBlobTab()
+        if not bookLB then initBlobTab() end
+
+        elements= { bookLB , bowyerRB , smithRB , carpRB , tailorRB,
+                          crossCB , tierB , sizeB , resourceB , filterLB}
     elseif tabs.ctrl.TabIndex == 3 then
-        print("Clicked Sort")
+        print("not implemented: Fourth Tab")
     else
         print("Shouldn't get here")
     end
