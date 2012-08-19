@@ -650,11 +650,11 @@ end
 -----------------------BOD BOOK FUNCTIONS---------------------
 function bod_books:scan()
     local books = item:scan():cont(UO.BackpackID):tp(8793):property():name("Bulk Order Book")
+    setmetatable(books,bod_books_meta)
     if next(books) == nil then
 	    UO.ExMsg(UO.CharID,3,33,"There are no BOD books in your main pack.")
-        return false
+        return books
     end
-    setmetatable(books,bod_books_meta)
     return books
 end
 

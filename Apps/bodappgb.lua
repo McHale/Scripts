@@ -260,6 +260,7 @@ function initBlobTab()
     col_x_offset = x_pos+btn_x+10
     col_y_offset = btn_y+5
 
+    reloadB = bodApp:button("reload",x_pos,y_pos,btn_x/2,btn_y)
     bookLB = bodApp:listbox("items",x_pos+btn_x/2,y_pos,btn_x/2,btn_y*3)
     bookLB.ctrl.MultiSelect = false
     books = bod_books:scan():book_names()
@@ -327,7 +328,7 @@ function()
     elseif tabs.ctrl.TabIndex == 2 then
         if not bookLB then initBlobTab() end
 
-        elements= { bookLB , bowyerRB , smithRB , carpRB , tailorRB,
+        elements= { reloadB, bookLB , bowyerRB , smithRB , carpRB , tailorRB,
                           crossCB , tierB , sizeB , resourceB , filterLB}
     elseif tabs.ctrl.TabIndex == 3 then
         print("not implemented: Fourth Tab")
