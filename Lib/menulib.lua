@@ -304,6 +304,7 @@ function menu:front() -- brings the object to front
     return self
 end
 
+
 function menu:free() -- frees the object, NOTE: doesn't remove it from the table
     Obj.Free(self.ctrl)
 end
