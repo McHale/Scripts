@@ -1,5 +1,5 @@
 dofile("../Lib/itemlib.lua")
-dofile("../Lib/basiclib.lua")
+dofile("../Lib/functions.lua")
 
 lgAnimals =
 {
@@ -14,7 +14,7 @@ lgAnimals =
 {"Forest Ostard","Desert OStard","Bird","Chicken","Eagle"}
 }
 
-standAlone = 
+standAlone =
 {"Skittering Hopper","Alligator","Lava Lizard","Llama","Giant Toad",
 "Snow Leopard","Walrus","Jack Rabbit","Slime","Rabbit","Hind","Great Hart",
 "Mountain Goat","Predator HellCat","Boar"}
@@ -22,7 +22,7 @@ standAlone =
 
 ------------------------------------------------------------
 ------------------------------------------------------------
-------------------------------------------------------------	
+------------------------------------------------------------
 
 tame = {}
 tame_meta = {__index = tame}
@@ -72,12 +72,12 @@ function tame:scanAllTaming()
 	end
 	return a
 end
-	
+
 
 function tame:BodType()
 	local items = self:Items()
 	local next = next
-	if next(items) == nil then 
+	if next(items) == nil then
 		UO.ExMsg(UO.CharID,3,33,"Could not get type- setting to -1")
 		return -1
 	end
@@ -99,15 +99,15 @@ function tame:BodType()
 	end
 	if self.largeFitting ~= nil then return -1 end
 end
-	
-	
+
+
 end
-	
+
 function tame:Items()
 	smDeeds = {}
 	for piece,amt in string.gmatch(self.stats,"(%a+%p?%a*%s*%a*%s?%a*): (%d+)") do
      		if piece ~= "Amount To Tame" then
-       			table.insert(smDeeds, piece)	
+       			table.insert(smDeeds, piece)
     		end
 	end
 	return smDeeds
@@ -117,7 +117,7 @@ function tame:ItemsValues()
 	values = {}
 	for piece,amt in string.gmatch(self.stats,"(%a+%p?%a*%s*%a*%s?%a*): (%d+)") do
      		if piece ~= "Amount To Tame" then
-       			table.insert(values, amt)	
+       			table.insert(values, amt)
     		end
 	end
 	return values
@@ -218,7 +218,7 @@ function bod:ExCrossRef()
 				if #self.largeFits[i] == 3 then armor_type = "Chainmail"
 				elseif #self.largeFits[i] == 4 then armor_type = "Ringmail"
 				else armor_type = "Platemail" end
-				if armor_type == "" then 
+				if armor_type == "" then
 					UO.ExMsg(UO.CharID,3,33,"Error cross referencing")
 					return
 				end
@@ -237,7 +237,7 @@ function bod:ExCrossRef()
 	end
 	end
 end
-	
+
 
 function bod:RewardValue()
 	local b_tp = self.bod_type
@@ -281,7 +281,7 @@ function bod:compare(otherBod)
 	baseA, baseB = self.base, otherBod.base
 	expA, expB = self.caliber, otherBod.caliber
 	resourceA, resourceB = self.resource, otherBod.resource
-	if nameA == nameB and baseA == baseB and expA == expB and resourceA == resourceB then 
+	if nameA == nameB and baseA == baseB and expA == expB and resourceA == resourceB then
 		return true
 	end
 	return false
@@ -348,10 +348,10 @@ end
 
 function bods:size(nSize,keep)
     keep = keep or true
-    local a = {} 
+    local a = {}
     if type(nSize) ~= "table" then
         nSize = {nSize}
-    end   
+    end
     for i = 1,#self do
 	if keep then
 		if contains(nSize, self[i].size) then
@@ -363,7 +363,7 @@ function bods:size(nSize,keep)
        	 	end
 	end
     end
-    
+
     setmetatable(a,bods_meta)
     return a
 end

@@ -30,7 +30,7 @@
 -------------------------------------------------------------------
 
 dofile("itemlib.lua")
-dofile("basiclib.lua")
+dofile("functions.lua")
 
 ------Index represents Bodtype in all values listed
 BOD_TYPES = {"BOWCRAFT","BLACKSMITH","CARPENTRY","TAILORING"}
@@ -44,7 +44,7 @@ Craft_Gump = {
 [3]={"Bow","Crossbow","Heavy Crossbow","Composite Bow",
 "Repeating Crossbow","Yumi"}
 },
--------Blacksmith item Category & Index Values in craft gump 
+-------Blacksmith item Category & Index Values in craft gump
 {
 [1]={"Ringmail Gloves","Ringmail Leggings","Ringmail Sleeves","Ringmail Tunic"},
 [2]={"Chainmail  Coif","Chainmail Leggings","Chainmail Tunic"},
@@ -146,7 +146,7 @@ Resource = {
 }
 
 -------------Reward LIST-----------------------------------
-Reward = { 
+Reward = {
 -------Bowcraft rewards --Reward[1]
 {"Bods value is less than 50 : not documented on wiki", "[75/25] Sturdy Axe / Boards", "[75/25] Garg Axe / Crafting Armor +1", "[66/33] Prospector's Axe / Crafting Armor +1", "[50/50] Stain of Durability / Crafting Armor +1", "[75/25] Pine Runic / Deco Item", "[66/33] Pine Runic / Deco Item", "[50/50] Ash Runic / Deco Item", "[66/33] Ash Runic / 5-use Dip Tub", "[50/50] Mohogany Runic / 5-use Dip Tub", "[50/50] Mohogany Runic / 120 Bowcraft PS", "[33/33/33] Yew Runic / 120 LJ PS / Crafting Armor +3", "[33/33/33] Yew Runic / +10 Ancient Hammer / Crafting Armor +3", "[33/33/33] Oak Runic / +10 Ancient Hammer / Crafting Armor +3", "[33/33/33] Oak Runic / +20 Ancient Hammer / 25-use Dip Tub", "[33/33/33] Ebony Runic / +20 Ancient Hammer / 25-use Dip Tub", "[50/50] Bamboo Runic / +30 Ancient Hammer", "[50/50] Purple Heart Runic / +30 Ancient Hamer", "[50/50] Redwood Runic / +40 Ancient Hammer", "[50/50] Petrified Runic / +40 Ancient Hammer", "[50/50] 50-use Dip Tub / Crafting Armor +5"},
 -------Blacksmith rewards --Reward[2]
@@ -195,7 +195,7 @@ LgItems={
 {"Straw Hat","Tunic","Long Pants","Boots"},
 {"Leather Skirt","Leather Bustier","Leather Shorts","Female Leather Armor","Female Studded Armor","Studded Bustier"},
 {"Floppy Hat", "Full Apron","Plain Dress" , "Sandals"},
-{"Bandana","Shirt","Skirt","Thigh Boots"}, 
+{"Bandana","Shirt","Skirt","Thigh Boots"},
 {"Tricorne Hat", "Cap","Wide Brim Hat","Tall Straw Hat"},
 {"Jester Hat","Jester Suit","Cloak","Shoes"},
 {"Bonnet","Half Apron","Fancy Dress","Sandals"},
@@ -209,7 +209,7 @@ LgItems={
 
 ------------------------------------------------------------
 ------------------------------------------------------------
-------------------------------------------------------------	
+------------------------------------------------------------
 
 bod = {}
 bod_meta = {__index = bod}
@@ -224,8 +224,8 @@ function bod:scanBod(bod_index,book_name,scan)
     if next(bods) ~= nil then
 	local b = bods:pop(i)
 	b["bod_index"] = bod_index
-	b["book_name"] = book_name	
-	setmetatable(b,bod_meta)	
+	b["book_name"] = book_name
+	setmetatable(b,bod_meta)
 	b["bod_type"] = b:BodType()
 	b["items"] = b:Items()
 	b["size"] = b:Size()
@@ -246,7 +246,7 @@ end
 
 
 
-----Crafting Related functions 
+----Crafting Related functions
 function bod:craftCategory()
 	for k,v in pairs(Craft_Gump[self.bod_type]) do
 		for i = 1, #v do
@@ -277,7 +277,7 @@ end
 function bod:BodType()
 	local items = self:Items()
 	local next = next
-	if next(items) == nil then 
+	if next(items) == nil then
 		UO.ExMsg(UO.CharID,3,33,"Could not get type- stopping script")
 		stop()
 	end
@@ -299,7 +299,7 @@ function bod:BodType()
 	end
 	return 4
 end
-	
+
 
 function bod:Caliber()
 	s,e = string.find(self.stats,"All Items Must Be Exceptional")
@@ -312,8 +312,8 @@ end
 
 function bod:Resource()
 	s,e,resource = string.find(self.stats,"All Items Must Be Crafted With (%a+%s?%a+)")
-	if resource == nil then	
-		if self.bod_type == 2 then return "Iron Ingots" 
+	if resource == nil then
+		if self.bod_type == 2 then return "Iron Ingots"
 		elseif self.bod_type ==1 or self.bod_type == 3 then
 			return "Natural Wood"
 		elseif self.bod_type==4 then
@@ -327,7 +327,7 @@ function bod:Items()
 	smDeeds = {}
 	for piece,amt in string.gmatch(self.stats,"(%a+%p?%a*%s*%a*%s?%a*): (%d+)") do
      		if piece ~= "Amount To Make" then
-       			table.insert(smDeeds, piece)	
+       			table.insert(smDeeds, piece)
     		end
 	end
 	return smDeeds
@@ -337,7 +337,7 @@ function bod:ItemsValues()
 	values = {}
 	for piece,amt in string.gmatch(self.stats,"(%a+%p?%a*%s*%a*%s?%a*): (%d+)") do
      		if piece ~= "Amount To Make" then
-       			table.insert(values, amt)	
+       			table.insert(values, amt)
     		end
 	end
 	return values
@@ -379,10 +379,10 @@ function bod:Size()
 		if self.bod_type ~= 2 then
    			return string.format("%d-piece",count)
 		else
-			if count == 6 then return "Platemail" 
+			if count == 6 then return "Platemail"
 			elseif count == 4 then return "Ringmail"
 			else return "Chainmail" end
-		end					
+		end
 	end
 end
 
@@ -448,7 +448,7 @@ function bod:ExCrossRef()
 				if #self.largeFits[i] == 3 then armor_type = "Chainmail"
 				elseif #self.largeFits[i] == 4 then armor_type = "Ringmail"
 				else armor_type = "Platemail" end
-				if armor_type == "" then 
+				if armor_type == "" then
 					UO.ExMsg(UO.CharID,3,33,"Error cross referencing")
 					return
 				end
@@ -467,7 +467,7 @@ function bod:ExCrossRef()
 	end
 	end
 end
-	
+
 
 function bod:RewardValue()
 	local b_tp = self.bod_type
@@ -511,7 +511,7 @@ function bod:compare(otherBod)
 	baseA, baseB = self.base, otherBod.base
 	expA, expB = self.caliber, otherBod.caliber
 	resourceA, resourceB = self.resource, otherBod.resource
-	if nameA == nameB and baseA == baseB and expA == expB and resourceA == resourceB then 
+	if nameA == nameB and baseA == baseB and expA == expB and resourceA == resourceB then
 		return true
 	end
 	return false
@@ -536,8 +536,8 @@ function bods:scanBooks()
     if next(bod_books) == nil then
 	UO.ExMsg(UO.CharID,3,33,"There are no BOD books in your main pack.")
     end
-    local deeds = {}	
-    for i = 1,#bod_books do 
+    local deeds = {}
+    for i = 1,#bod_books do
 	book = bod_books:pop(i)
 	s,e,count = string.find(book.stats,"Deeds In Book: (%d+)")
 	if count == 0 then
@@ -566,20 +566,20 @@ function bods:scanBooks()
 end
 
 function bods:tier(nTier)
-    local a = {} 
+    local a = {}
     if type(nTier) ~= "table" then
         nTier = {nTier}
     end
-    
+
     for i = 1,#self do
         for j = 1,#nTier do
             if self[i].tier == nTier[j] then
                 table.insert(a,self[i])
-    
+
             end
         end
     end
-    
+
     setmetatable(a,bods_meta)
 
     return a
@@ -587,10 +587,10 @@ end
 
 function bods:size(nSize,keep)
     keep = keep or true
-    local a = {} 
+    local a = {}
     if type(nSize) ~= "table" then
         nSize = {nSize}
-    end   
+    end
     for i = 1,#self do
 	if keep then
 		if contains(nSize, self[i].size) then
@@ -602,18 +602,18 @@ function bods:size(nSize,keep)
        	 	end
 	end
     end
-    
+
     setmetatable(a,bods_meta)
     return a
 end
 
 function bods:bod_tp(nType)
     local a = {}
-    
+
     if type(nType) ~= "table" then
         nType = {nType}
     end
-    
+
     for i = 1,#self do
         for j = 1,#nType do
             if self[i].tp == nType[j] then
@@ -621,7 +621,7 @@ function bods:bod_tp(nType)
             end
         end
     end
-    
+
     setmetatable(a,bods_meta)
     return a
 end
