@@ -7,7 +7,7 @@
 --==================================
 
 dofile("../Lib/itemlib.lua")
-dofile("../Lib/basiclib.lua")
+dofile("../Lib/functions.lua")
 
 -------------------------TODO--------------------------
 -- Finish adding tailoring types
@@ -152,20 +152,20 @@ function S.storeGoldBOH()
 	if next(gold_targets) == nil then
 		return
 	end
-	---Penny's lib always returns lists - so just 
+	---Penny's lib always returns lists - so just
 	---get the first element
 	local gold = gold_targets:pop()
 	---this is in jack penny's item library.
 	gold:drop(boh.id)
 end
-	
 
-------------------------------------------------------------------    	
+
+------------------------------------------------------------------
 --------------Grabbing Storage & Target IDs-----------------------
 -----Currently Assumes Everything is being held in main pack------
 
 function S.getStorageContainer(storage_index)
-    local container = S.storage_names[storage_index]    
+    local container = S.storage_names[storage_index]
     local my_containers = item:scan():cont(UO.BackpackID):tp(container_types):property():name(container)
     if next(my_containers) == nil then
 	UO.ExMsg(UO.CharID,3,33,string.format("You do not have %s",container))
@@ -193,7 +193,7 @@ function store(storage_index, target_types)
 		UO.ExMsg(UO.CharID,3,33,string.format("Nothing to Store in %s",storage.name))
 		return
 	end
-	---Runic House doesn't play nice so set here for all types	
+	---Runic House doesn't play nice so set here for all types
 	local x = sizeX
 	local y = sizeY[storage_index]
 	local addX = addOffsetX
@@ -208,7 +208,7 @@ function store(storage_index, target_types)
 	for i = 1,#valid_targets do
 		if not successful then
 		Click.Gump(addX, addY)
-		WaitForTarget()
+		pop:waitTarget()
 		end
 		storage:target(valid_targets:pop(i).id):waitContSize(x,y)
 		successful = UO.TargCurs

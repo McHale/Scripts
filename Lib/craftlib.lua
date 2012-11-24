@@ -1,6 +1,8 @@
-dofile("basiclib.lua")
+dofile("itemlib.lua")
+dofile("functions.lua")
+dofile("resourcelib.lua")
 
-    -- Craft v1.1
+    -- Craft v1.2 using itemlib over basiclib
     Craft = {}
 
     local C = Craft
@@ -32,7 +34,7 @@ dofile("basiclib.lua")
     ShadowIron = 3,
     Copper = 4,
     Bronze = 5,
-    Gold = 6,   
+    Gold = 6,
     Agapite = 7,
     Verite = 8,
     Valorite = 9,
@@ -73,35 +75,35 @@ dofile("basiclib.lua")
        for i = 1,a do
           print("Makelast: " .. i .. "/" .. a)
           Click.Gump(MakeLastX,MakeLastY)
-          WaitForGump(CraftGumpSizeX,CraftGumpSizeY)
+          pop:waitContSize(CraftGumpSizeX,CraftGumpSizeY)
        end
     end
 
     function C.SelectCategory(a)
        Click.Gump(CategoryX,CategoryY[a])
-       WaitForGump(CraftGumpSizeX,CraftGumpSizeY)
+       pop:waitContSize(CraftGumpSizeX,CraftGumpSizeY)
     end
 
     function C.SelectItem(a)
        while a > 10 do
           Click.Gump(NextPageX,NextPageY)
-          WaitForGump(CraftGumpSizeX,CraftGumpSizeY)
+          pop:waitContSize(CraftGumpSizeX,CraftGumpSizeY)
           a = a - 10
        end
        Click.Gump(ItemX,ItemY[a])
-       WaitForGump(CraftGumpSizeX,CraftGumpSizeY)
+       pop:waitContSize(CraftGumpSizeX,CraftGumpSizeY)
     end
 
     function C.SelectMaterial(a)
        Click.Gump(SelectMaterialX,SelectMaterialY)
-       WaitForGump(CraftGumpSizeX,CraftGumpSizeY)
+       pop:waitContSize(CraftGumpSizeX,CraftGumpSizeY)
        if a > 10 then
           Click.Gump(SelectMaterialNextPageX,SelectMaterialNextPageY)
-          WaitForGump(CraftGumpSizeX,CraftGumpSizeY)
+          pop:waitContSize(CraftGumpSizeX,CraftGumpSizeY)
           a = a - 10
        end
        Click.Gump(ItemX,ItemY[a])
-       WaitForGump(CraftGumpSizeX,CraftGumpSizeY)
+       pop:waitContSize(CraftGumpSizeX,CraftGumpSizeY)
     end
 
     function C.OpenTool(sProf)
@@ -112,34 +114,36 @@ dofile("basiclib.lua")
        if sProf == "tinker"    then toolType = Type.TOOLKIT end
        if sProf == "scribe"    then toolType = Type.SCRIBESPEN end
        if sProf == "alchemist" then toolType = Type.MORTARANDPESTLE end
-       if FindItem.Cont(toolType,1094105666) then
-	--UO.BackpackID
-          UO.LObjectID = FindItem.ID[1]
+	   local a = {}
+	   local a = item:scan():cont(UO.BackpackID):tp(toolType)
+       if #a >0  then
+	--UO.BackpackID  ? 1094105666
+          UO.LObjectID = a[1].id
           UO.Macro(17,0)
-          WaitForGump(CraftGumpSizeX,CraftGumpSizeY)
+          pop:waitContSize(CraftGumpSizeX,CraftGumpSizeY)
           return true
        end
-       
+
        return false
     end
 
     function C.Smelt(itemID)
        Click.Gump(SmeltItemX,SmeltItemY)
-       WaitForTarget()
+       pop:waitTarget(5000)
        UO.LTargetID = itemID
        UO.LTargetKind = 1
        UO.Macro(22,0)
-       WaitForGump(CraftGumpSizeX,CraftGumpSizeY)
+       pop:waitContSize(CraftGumpSizeX,CraftGumpSizeY)
     end
 
     function C.Cut(itemID)
        UO.LObjectID = cutToolID
        UO.Macro(17,0)
-       WaitForTarget()
+       pop:waitTarget(5000)
        UO.LTargetID = itemID
        UO.LTargetKind = 1
        UO.Macro(22,0)
-       wait(500)   
+       wait(500)
     end
 
     function C.DestroyItem(sProf,itemID)
@@ -153,9 +157,11 @@ dofile("basiclib.lua")
        if C.OpenTool(sProf) then
           C.ItemsInBackpack = {}
           C.CraftedID = {}
-          if FindItem.Cont("all",UO.BackpackID) then
-             for i=1,FindItem.N do
-                table.insert(C.ItemsInBackpack,FindItem.ID[i])
+		  local a = {}
+		  local a = item:scan():cont(UO.BackpackID)
+          if #a >0  then
+             for i=1,#a do
+                table.insert(C.ItemsInBackpack,a.id[i])
              end
           end
           backpackString = table.concat(C.ItemsInBackpack,"_")
@@ -165,21 +171,22 @@ dofile("basiclib.lua")
           C.SelectCategory(nCat)
           C.SelectItem(nItem)
           -- Set LastItemType
-          if FindItem.Cont("all",UO.BackpackID) then
+		  local a = item:scan():cont(UO.BackpackID)
+          if #a >0 then
              backpackString = table.concat(C.ItemsInBackpack,"_")
-             for i = 1,FindItem.N do
-                IDstr = ""..FindItem.ID[i]
+             for i = 1,#a do
+                IDstr = ""..a.id[i]
                 if not string.find(backpackString,IDstr) then
-                   C.LastItemType = FindItem.Type[i]
+                   C.LastItemType = a.tp[i]
                    break
                 end
              end
           end
           C.MakeLast(nAmnt-1)
-          FindItem.Cont(C.LastItemType,UO.BackpackID)
-          for i=1,FindItem.N do
-             if not string.match(backpackString,""..FindItem.ID[i]) then
-                table.insert(C.CraftedID,FindItem.ID[i])
+		  local a = item:scan():cont(UO.BackpackID):tp(C.LastItemType)
+          for i=1,#a do
+             if not string.match(backpackString,""..a.id[i]) then
+                table.insert(C.CraftedID,a.id[i])
              end
           end
           Click.CloseGump()
@@ -189,18 +196,20 @@ dofile("basiclib.lua")
     end
 
     function C.MakeExc(sProf,nCat,nItem,nMat,nAmnt)
+	   local a = {}
        C.ItemsInBackpack = {} -- Saving the IDs of the items in Backpack, so they won't be destroyed
        if sProf == "tinker" or sProf == "scribe" or sProf == "alchemist" then
           C.Make(sProf,nCat,nItem,nMat,nAmnt)
           return
        end
        if sProf == "tailor" then
-          FindItem.Cont(Type.SCISSORS,UO.BackpackID)
-          cutToolID = FindItem.ID[1]
+		  local a = item:scan():cont(UO.BackpackID):tp(Type.SCISSORS)
+          cutToolID = a.id[1]
        end
-       if FindItem.Cont("all",UO.BackpackID) then
-          for i=1,FindItem.N do
-             table.insert(C.ItemsInBackpack,FindItem.ID[i])
+	   local a = item:scan():cont(UO.BackpackID)
+       if #a>0  then
+          for i=1,#a do
+             table.insert(C.ItemsInBackpack,a.id[i])
           end
        end
        -- Make one item
@@ -210,12 +219,13 @@ dofile("basiclib.lua")
           C.SelectItem(nItem)
        end
        -- Get the item type
-       if FindItem.Cont("all",UO.BackpackID) then
+		local a = item:scan():cont(UO.BackpackID)
+       if #a >0  then
           backpackString = table.concat(C.ItemsInBackpack,"_")
-          for i = 1,FindItem.N do
-             IDstr = ""..FindItem.ID[i]
+          for i = 1,#a do
+             IDstr = ""..a.id[i]
              if not string.find(backpackString,IDstr) then
-                 C.LastItemType = FindItem.Type[i]
+                 C.LastItemType = a.tp[i]
                  break
              end
           end
@@ -229,32 +239,32 @@ dofile("basiclib.lua")
        notDone = true
        print("Looking for non-exceptionals")
        while notDone do
-          FindItem.Cont(C.LastItemType,UO.BackpackID)
-          for i=1,FindItem.N do
-             if not string.match(backpackString,""..FindItem.ID[i]) then
-                name,stats = UO.Property(FindItem.ID[i])
+			local a = item:scan():cont(UO.BackpackID):tp(C.LastItemType)
+          for i=1,#a do
+             if not string.match(backpackString,""..a.id[i]) then
+                name,stats = UO.Property(a.id[i])
                 wait(100)
                 if stats == "" then
                    wait(1000)
                    print("Failed to get property, trying again..")
-                   name,stats = UO.Property(FindItem.ID[i])
+                   name,stats = UO.Property(a.id[i])
                 end
                 if not string.match(name,"Exceptional") and not string.match(stats,"Exceptional") then
                    print("Non-exc found, printing properties: ",name,stats)
-                   C.DestroyItem(sProf,FindItem.ID[i])
+                   C.DestroyItem(sProf,a.id[i])
                 end
              end
           end
           print("Smelting/cutting done, counting items")
           -- Count Items
-          FindItem.Cont(C.LastItemType,UO.BackpackID)
-          print("Total amount found:",FindItem.N)
+          local a = item:scan():cont(UO.BackpackID):tp(C.LastItemType)
+          print("Total amount found:",#a)
           checkAmnt = 0
           C.CraftedID = {}
-          for i=1,FindItem.N do
-             if not string.match(backpackString,""..FindItem.ID[i]) then
+          for i=1,#a do
+             if not string.match(backpackString,""..a.id[i]) then
                 checkAmnt = checkAmnt + 1
-                table.insert(C.CraftedID,FindItem.ID[i])
+                table.insert(C.CraftedID,a.id[i])
              end
           end
           print("Amount of items found for BOD:",checkAmnt)
