@@ -3,21 +3,21 @@
 -- Author: McHale
 -- Version: 1.0
 -- OpenEUO version tested with: 0.91
--- Purpose: 
+-- Purpose:
 -- TODO A LOT OF DIFFERENT PROGRAMS WILL BE INCORPORATED INTO THIS
 --==========================================================================================================
 
-------------------------------------------------------------   
+------------------------------------------------------------
 --------------------------IMPORTS---------------------------
-------------------------------------------------------------   
+------------------------------------------------------------
 
 dofile("../Lib/menulib.lua")
 dofile("../Lib/bodlibv2.lua")
 dofile("../Lib/functions.lua")
-dofile("../Lib/basiclib.lua")
+dofile("../Lib/itemlib.lua")
 
 
-------------------------------------------------------------------------------------------------------------   
+------------------------------------------------------------------------------------------------------------
 ------------------------------------------------FUNCTIONS---------------------------------------------------
 ------------------------------------------------------------------------------------------------------------
         --Price Variable Settings--
@@ -46,7 +46,7 @@ function setBodBook()
         if next(bodbooks:tp(8793)) == nil then
            return -1
         end
- 
+
         bodbooks:property()
         bodbook = bodbooks:pop()
         return getName(bodbook)
@@ -56,11 +56,11 @@ function setPrice()
 	for char in priceStr:gmatch"." do
 	    UO.Key(char)
 	end
-	UO.Key("ENTER")                                            
+	UO.Key("ENTER")
 end
 
 function waitGumpClose(x,y)
-         while UO.ContSizeX == x and UO.ContSizeY == y do 
+         while UO.ContSizeX == x and UO.ContSizeY == y do
                wait(10)
          end
          wait(500)
@@ -72,7 +72,7 @@ function waitGumpOpen(x,y)
          end
 end
 
-function pricePage()	
+function pricePage()
 	local page_end = false
 	local count = 0
 	local i = UO.ContPosY
@@ -91,8 +91,9 @@ function pricePage()
 		          waitGumpClose(615,454)
 		          --setTime = getticks()
 		          setPrice()
-		          waitGumpOpen(615,454)
-		          count = count + 1 
+				  pop:waitContSize(615,454)
+		          --waitGumpOpen(615,454)
+		          count = count + 1
 		          i = i + 20
                        else
                           i = i+1
@@ -114,11 +115,11 @@ function price()
 	   errorMsg("Please select a Bod Book")
 	elseif priceStr == "" then
 	   errorMsg("Please enter a Price")
-	elseif priceInt == nil then 
+	elseif priceInt == nil then
 	   errorMsg("Please enter a number for the price")
 	elseif priceInt%1 ~= 0 then
 	   errorMsg("Please enter an integer for the price")
-	else 
+	else
         if bodbook == -1 then
            return
         end
@@ -126,7 +127,7 @@ function price()
         s,e,num_deeds = string.find(bodbook.stats,"Deeds In Book: (%d+)")
         local count = 0
         while count < tonumber(num_deeds) do
-       	      toAdd = pricePage()			
+       	      toAdd = pricePage()
               count = count + toAdd
               Click.Gump(240, 425)
               wait(1000)
@@ -136,9 +137,9 @@ function price()
         end
 end
 
-------------------------------------------------------------------------------------------------------------   
+------------------------------------------------------------------------------------------------------------
 -------------------------------------------------GUI CODE---------------------------------------------------
-------------------------------------------------------------------------------------------------------------   
+------------------------------------------------------------------------------------------------------------
 
 ---------------------------------------------------------
 ---------------------GUI VARIABLES-----------------------
@@ -202,14 +203,14 @@ end
 --Returns Select index from the listbox, which starts at 0
 --instead of the usual 1, and gets the corresponding index in
 --the items objects list returned by Jack Penny's itemlib
-function getSelectedIndices(listbox, items) 
+function getSelectedIndices(listbox, items)
     if next(items) == nil then
         return {}
     end
     toReturn = {}
 	for i =0, #items-1 do
 		local bool = listbox.ctrl.GetSelected(i)
-        if bool then 
+        if bool then
            table.insert(toReturn,i+1)
         end
 	end
@@ -231,15 +232,15 @@ function initOneClickTab()
     btn_x , btn_y = 250,20
     col_x_offset = x_pos+btn_x+10
     col_y_offset = btn_y+5
-    
-    fillB = bodApp:button("fill",x_pos,y_pos,btn_x,btn_y,"Fill Bod") 
+
+    fillB = bodApp:button("fill",x_pos,y_pos,btn_x,btn_y,"Fill Bod")
     x_pos, y_pos = updateOffsets(false,true)
     rewardB = bodApp:button("reward",x_pos,y_pos,btn_x,btn_y,"Bod Reward")
     x_pos, y_pos = updateOffsets(false,true)
     referenceB = bodApp:button("reference",x_pos,y_pos,btn_x,btn_y,"Cross-Reference Bod")
     x_pos, y_pos = updateOffsets(false,true)
 
-    fillB:onclick(function() 
+    fillB:onclick(function()
 	    local newBod = bods:scan():pop()
 	    if newBod then newBod:Do()
 	    else errorMsg("There are no bulk order deeds in your main pack")
@@ -276,7 +277,7 @@ function initPriceTab()
     msgE = bodApp:edit("msg",x_pos,y_pos,btn_x,btn_y,"No Bulk order book set.")
     msgE.ctrl.Enabled = false
     x_pos, y_pos = updateOffsets(false,true)
-    priceE = bodApp:edit("input",x_pos,y_pos,btn_x,btn_y,"Enter the price here.")    
+    priceE = bodApp:edit("input",x_pos,y_pos,btn_x,btn_y,"Enter the price here.")
     x_pos, y_pos = updateOffsets(true,true)
     priceB = bodApp:button("run", x_pos,y_pos,btn_x,btn_y,"Price Bulk Order Deeds")
 
@@ -365,7 +366,7 @@ function initSortTab()
     books = bod_books:scan():book_names()
     loadListBox(bookLB, books)
     reloadB = toPlaceGB:button("reload",local_x_pos,local_y_pos,btn_x/3,btn_y,"Reload Books")
-    reloadB:onclick(function() 
+    reloadB:onclick(function()
                                books = bod_books:scan():book_names()
                                loadListBox(bookLB, books)
                                end)
@@ -392,16 +393,16 @@ function initSortTab()
     loadProfFilter()
     col_y_offset = btn_y*9+5
     x_pos, y_pos = updateOffsets(false,true)
-    col_y_offset = btn_y + 10  
+    col_y_offset = btn_y + 10
 
-    saveB = bodApp:button("save",x_pos,y_pos,btn_x,btn_y,"Save Filter") 
+    saveB = bodApp:button("save",x_pos,y_pos,btn_x,btn_y,"Save Filter")
 
     oneRB:onclick(function() loadProfFilter() end)
     twoRB:onclick(function() loadProfFilter() end)
     threeRB:onclick(function() loadProfFilter() end)
-    fourRB:onclick(function() loadProfFilter() end) 
+    fourRB:onclick(function() loadProfFilter() end)
 
-    bowyerRB:onclick(function() 
+    bowyerRB:onclick(function()
         filterID = getSelectedFilter()
         craftFilter[filterID] = getSelectedProfession()
         end)
@@ -439,9 +440,9 @@ function initSortTab()
             craftFilter[filterID] = getSelectedProfession()
             bookFilter[filterID] = getSelectedIndices(bookLB, books)
             crossFilter[filterID] = crossCB.ctrl.Checked
-            if filter == "tier" then 
+            if filter == "tier" then
                 local selected = getSelectedIndices(filterLB, Reward[profID])
-                tierFilter[filterID] = selected 
+                tierFilter[filterID] = selected
             elseif filter == "size" then
                 local selected = getSelectedIndices(filterLB, BodSizes[profID])
                 sizeFilter[filterID] = selected
@@ -469,10 +470,10 @@ function getSelectedFilter()
 end
 
 function setSelectedProfession(filterID)
-        if filterID == 1 then bowyerRB:checked(true) 
+        if filterID == 1 then bowyerRB:checked(true)
         elseif filterID == 2 then smithRB:checked(true)
         elseif filterID == 3 then carpRB:checked(true)
-        elseif filterID == 4 then tailorRB:checked(true) 
+        elseif filterID == 4 then tailorRB:checked(true)
         end
 end
 ---------------------------------------------------------
@@ -492,7 +493,7 @@ function()
         elements = { fillB , rewardB , referenceB }
     elseif tabs.ctrl.TabIndex == 1 then
         if not bodBookB then initPriceTab() end
-        
+
         elements = { bodBookB , msgE , priceE , priceB }
     elseif tabs.ctrl.TabIndex == 2 then
         if not filterGB then initSortTab() end

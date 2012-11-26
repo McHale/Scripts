@@ -14,3 +14,5 @@ TRASH_ID = "{put your trash bag id here}
 LOOT_BAG_ID = "{put your loot bag id here}"
 BOS_ID = "{put your bag of sending id here}"
 DEFAULT_RUNEBOOK_ID = "{put your default runebook id here}"
+
+--|||LOOT TABLES||--

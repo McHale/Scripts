@@ -7,7 +7,7 @@
 --==========================================================
 
 dofile("../Lib/itemlib.lua")
-dofile("../Lib/basiclib.lua")
+dofile("../Lib/functions.lua")
 dofile("../Lib/menulib.lua")
 dofile("../Lib/journallib.lua")
 dofile("../Lib/config.lua")
@@ -20,7 +20,7 @@ function crossPollinate()
 	UO.ExMsg(UO.CharID,3,20,"This is meant to pollinate same bright colors, or plains for mutations.")
 	local flowers = item:scan():ground(0):z_axis(0,20):tp(flower_types):property()
 	local next = next
-	if next(flowers) == nil then	
+	if next(flowers) == nil then
 		UO.ExMsg(UO.CharID,3,18,"You are not near any flowers.")
 		return
 	end
@@ -58,7 +58,7 @@ function checkPitcher()
 	local watertroughs = item:scan():ground(2):tp({2881,2882,2883,2884})
         if next(watertroughs) ~= nil then
 		watertrough = watertroughs:pop()
-	else 
+	else
 		UO.ExMsg(UO.CharID,3,18, "You must be next to a water trough.")
 		return
 	end
@@ -79,7 +79,7 @@ end
 --Won't Stop - fix later
 function fillSprinkler()
 	local sprinklers = item:scan():ground(3):tp(3706):property():name("Water Sprinkler")
-	if next(sprinklers) == nil then 
+	if next(sprinklers) == nil then
 		UO.ExMsg(UO.CharID,3,18,"You need to be within three tiles of a water sprinkler")
 		return
 	end
@@ -99,8 +99,8 @@ function fillSprinkler()
 		wait(750)
 		local name, info = UO.Property(sprinkler.id)
 		s,e,num = string.find(info,"Water Left: (%d+)")
-		if tonumber(num) == 100 then 
-			notDone = false 
+		if tonumber(num) == 100 then
+			notDone = false
 		end
 	end
 	UO.ExMsg(UO.CharID,3,15,"Water Sprinkler is full.")
@@ -126,9 +126,9 @@ function softenDirt()
 			if name == "A Bowl Of Soft Dirt" then
 				UO.ExMsg(UO.CharID,3,11, string.format("Softened Dirt %i/%i", i, #myBowls))
 				notSoftened = false
-			end   
+			end
 		end
-	end 
+	end
 end
 
 function storeSeeds()
@@ -155,7 +155,7 @@ end
 function fillBowls(x,y)
 	local bowls = item:scan():cont(UO.BackpackID):tp(5629)
 	local next = next
-	if next(bowls) == nil then 
+	if next(bowls) == nil then
 		UO.ExMsg(UO.CharID,3,18,"There are no bowls to fill with dirt.")
 		return
 	end
@@ -187,10 +187,10 @@ function fillBowls(x,y)
         end
 	bowls = item:scan():cont(UO.BackpackID):tp(5629)
 	local next = next
-	if next(bowls) == nil then 
+	if next(bowls) == nil then
 	        UO.ExMsg(UO.CharID,3,20,"Fill Bowls Completed.")
-                return 
-        else 
+                return
+        else
              fillBowls(x,y)
         end
 	UO.ExMsg(UO.CharID,3,20,"Fill Bowls Completed.")
@@ -257,7 +257,7 @@ end
 function openGumps()
 	local flowers = item:scan():ground(2):z_axis(0,20):tp(flower_types)
 	local next = next
-	if next(flowers) == nil then	
+	if next(flowers) == nil then
 		UO.ExMsg(UO.CharID,3,18,"You are not near any flowers.")
 		return
 	end
@@ -282,7 +282,7 @@ function ifSeeds()
             return true
          end
 end
-          
+
 function getSeeds()
         UO.ExMsg(UO.CharID,3,11,"Attempting to collect seeds from all plants within a 3 tile radius...")
 	wait(500)
@@ -297,7 +297,7 @@ function getSeeds()
 		UO.ExMsg(UO.CharID,3,18,"You are not near any flowers")
 		return
 	end
-	
+
 	UO.ExMsg(UO.CharID,3,13,string.format("Checking %d Flowers For Seeds.",#flowers))
 	for i=1,#flowers do
 		local flower = flowers:pop(i)
@@ -325,8 +325,8 @@ end
 --------------------------GUI----------------------------------
 flowerApp = menu:form(130,270,"Flower Helpers")
 
-sprinklerB = flowerApp:button("sprinkler",10,10,100,20,"Fill Water Sprinkler") 
-seedsB = flowerApp:button("seeds",10,35,100,20,"Store Seeds") 
+sprinklerB = flowerApp:button("sprinkler",10,10,100,20,"Fill Water Sprinkler")
+seedsB = flowerApp:button("seeds",10,35,100,20,"Store Seeds")
 fillB = flowerApp:button("fill",10,60,100,20,"Fill Bowls")
 softenB = flowerApp:button("soften",10,85,100,20,"Soften Dirt")
 crossB = flowerApp:button("cross",10,110,100,20,"Cross Pollinate")
