@@ -1,5 +1,5 @@
 dofile("../Lib/menuLib.lua")
-dofile("../Lib/basiclib.lua")
+dofile("../Lib/functions.lua")
 dofile("../Lib/itemlib.lua")
 
 leftOffset = 135
@@ -35,10 +35,10 @@ end
 --Returns Select index from the listbox, which starts at 0
 --instead of the usual 1, and gets the corresponding index in
 --the items objects list returned by Jack Penny's itemlib
-function GetSelectedItem(listbox, items) 
+function GetSelectedItem(listbox, items)
         if next(items) == nil then
 	   errorMsg("There are no items")
-           return 
+           return
         end
 	for i =0, #items-1 do
 		local bool = listbox.ctrl.GetSelected(i)
@@ -59,7 +59,7 @@ function getRunebooks()
 	end
 	local container = UO.LTargetID
 	UO.LObjectID = container
-	
+
 	return item:scan():cont(container):tp(8901):property()
 end
 -----------------------------------------------------------------
@@ -97,10 +97,10 @@ function navigate(position)
 		end
 		toUse = runebook
 	else
-		toUse = GetSelectedItem(itemsLB,books)	
+		toUse = GetSelectedItem(itemsLB,books)
 		if toUse == nil then
 			return
-		end		
+		end
 	end
 	toUse:use()
 	wait(500)
@@ -114,11 +114,11 @@ function navigate(position)
 		xOffset = leftOffset
 	else
 		xOffset = rightOffset
-	end		
+	end
 	if xOffset == 0 or yOffset == 0 then
 	   errorMsg("Error setting offset")
            return
-        end   
+        end
         Click.Gump(xOffset,yOffset)
 end
 
@@ -189,9 +189,9 @@ thirteenB:onclick(function() navigate(13) end)
 fourteenB:onclick(function() navigate(14) end)
 fifteenB:onclick(function() navigate(15) end)
 sixteenB:onclick(function() navigate(16) end)
-setB:onclick(function() 
+setB:onclick(function()
 books = getRunebooks()
-loadListBox(itemsLB,books) 
+loadListBox(itemsLB,books)
 end)
 
 runebookApp:show()

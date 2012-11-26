@@ -1,5 +1,4 @@
 dofile("../Lib/itemlib.lua")
-dofile("../Lib/basiclib.lua")
 dofile("../Lib/menulib.lua")
 dofile("../Lig/config.lua")
 
@@ -89,11 +88,11 @@ function stockEngravers()
 end
 trinApp = menu:form(175,225,"Stock Trinsic")
 
-tameB = trinApp:button("tame",10,10,150,20,"Stock Taming Bod Books") 
-bowB = trinApp:button("bow",10,35,150,20,"Stock Bowcraft Bod Books") 
-bsB = trinApp:button("bs",10,60,150,20,"Stock Blacksmith Bod Books") 
+tameB = trinApp:button("tame",10,10,150,20,"Stock Taming Bod Books")
+bowB = trinApp:button("bow",10,35,150,20,"Stock Bowcraft Bod Books")
+bsB = trinApp:button("bs",10,60,150,20,"Stock Blacksmith Bod Books")
 carpB = trinApp:button("carp",10,85,150,20,"Stock Carpentry Bod Books")
-tailorB = trinApp:button("tailor",10,110,150,20,"Stock Tailoring Bod Books")  
+tailorB = trinApp:button("tailor",10,110,150,20,"Stock Tailoring Bod Books")
 runeB = trinApp:button("rune",10,135,150,20,"Stock Runebooks")
 engraverB = trinApp:button("engrave",10,160,150,20,"Stock Engravers")
 

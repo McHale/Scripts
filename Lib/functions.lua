@@ -8,13 +8,22 @@
 -- Functions:
 -- 		errorMsg(string)
 
+--		Clicks
 -- 		C.Left(x,y)
 --		C.Right(x,y)
---		C.Gump(x,y)
---		C.CloseGump()
+--		C.gumpump(x,y)
+--		C.Closegumpump()
 
---		Packcheck(id)
---		AllGumps()
+--		Gumps	/	Filters
+--		gump:search
+
+--		gump:id(val)
+--		gump:tp(val)
+--		gump:coord(x,y)
+--		gump:size(x,y)
+--		gump:name(str)
+--		gump:kind(val)
+--		gump:hp(val)
 --==========================================================
 -- Declarations
 Click = {}
@@ -32,60 +41,128 @@ function C.Right(x,y)
 	UO.Click(x,y,false,true,true,false)
 end
 
-function C.Gump(x,y)
+function C.gumpump(x,y)
 	C.Left(UO.ContPosX+x,UO.ContPosY+y)
 end
 
-function C.CloseGump()
+function C.Closegumpump()
 	C.Right(UO.ContPosX+UO.ContSizeX/2,UO.ContPosY+UO.ContSizeY/2)
 end
 
-function Packcheck(nid)
-local a, cnt = AllGumps()
-	for i=0, cnt-1 do
-		if a[i].id == nid then
-			return true
-		end
-	end
-	return false
-end
+gump = {}
+gump_meta = {__index = gump}
 
-function AllGumps()
+function gump:search()
 local a = {}
 	for i=0, math.huge do
-    local sName,nX,nY,nSX,nSY,nKind,nId,nType,nHP = UO.GetCont(i)
+    local sName,nX,nY,nSX,nSY,nKind,nId,nType,nHP = UO.gumpetCont(i)
 		if sName ==nil then
+			setmetatable(a, gump_meta)
 			return a, i
 		else
-			a[i] = string.lower({name=sName,x=nX,y=nY,sizex=nSX,sizey=nSY,kind=nKind,id=nId,type=nType,hp=nHP})
+			table.insert(a, {name=string.lower(sName),x=nX,y=nY,sizex=nSX,sizey=nSY,kind=nKind,id=nId,tp=nType,hp=nHP})
 		end
 	end
 end
 
-function getTrashID
-	for i=0, UO.ScanItems(false)-1,1 do
-		local id,typ,kind,contid,x,y,z,stack,rep,col = UO.GetItem(i)
-		if (typ == 2482) and (contid == UO.Backpackid) then
-		   local name = UO.Property(id)
-		   if string.match(string.lower(name) , "trash") ~= nil then
-				TRASH_ID = id
-		   end
-		end
-	end
-end
---[[ === Already in .itemslib ==
-function WaitForGump(x,y)
-timeout = 1000
-start = getticks()
-	while not (UO.ContSizeX==x and UO.ContSizeY==y and current < timeout) do
-		wait(5)
-		current = getticks() - start
-		print(current)
-	end
+function gump:name(str)
+local a = {}
+    if type(str) ~= "table" then
+        str = {str}
+    end
+    for i = 1,#self do
+        for ii = 1,#str do
+            if string.match(self[i].name, string.lower(str[ii])) ~= nil then
+                table.insert(a,self[i])
+            end
+        end
+    end
+    setmetatable(a,gump_meta)
+    return a
 end
 
-
-function WaitForTarget()
-	while not UO.TargCurs do wait(1) end
+function gump:tp(val)
+local a = {}
+    if type(val) ~= "table" then
+        val = {val}
+    end
+    for i = 1,#self do
+        for ii = 1,#str do
+            if self[i].tp == val[ii] ~= nil then
+                table.insert(a,self[i])
+            end
+        end
+    end
+    setmetatable(a,gump_meta)
+    return a
 end
---]]
+
+function gump:hp(val)
+local a = {}
+    if type(val) ~= "table" then
+        val = {val}
+    end
+    for i = 1,#self do
+        for ii = 1,#str do
+            if self[i].hp == val[ii] ~= nil then
+                table.insert(a,self[i])
+            end
+        end
+    end
+    setmetatable(a,gump_meta)
+    return a
+end
+
+function gump:size(cx, cy)
+local a = {}
+    for i = 1,#self do
+		if self[i].sizex..self[i].sizey == cx..cy ~= nil then
+			table.insert(a,self[i])
+        end
+    end
+    setmetatable(a,gump_meta)
+    return a
+end
+
+function gump:id(val)
+local a = {}
+    if type(val) ~= "table" then
+        val = {val}
+    end
+    for i = 1,#self do
+        for ii = 1,#str do
+            if self[i].id == val[ii] ~= nil then
+                table.insert(a,self[i])
+            end
+        end
+    end
+    setmetatable(a,gump_meta)
+    return a
+end
+
+function gump:kind(val)
+local a = {}
+    if type(val) ~= "table" then
+        val = {val}
+    end
+    for i = 1,#self do
+        for ii = 1,#str do
+            if self[i].k == val[ii] ~= nil then
+                table.insert(a,self[i])
+            end
+        end
+    end
+    setmetatable(a,gump_meta)
+    return a
+end
+
+function gump:coord(cx, cy)
+local a = {}
+    for i = 1,#self do
+		if self[i].x..self[i].y == cx..cy ~= nil then
+			table.insert(a,self[i])
+        end
+    end
+    setmetatable(a,gump_meta)
+    return a
+end

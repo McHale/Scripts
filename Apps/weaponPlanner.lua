@@ -1,22 +1,21 @@
 --==========================================================================================================
--- Script Name: Stig's Weapon Planner 
+-- Script Name: Stig's Weapon Planner
 -- Author: McHale
 -- Version: 1.0
 -- OpenEUO version tested with: 0.91
--- Purpose: 
+-- Purpose:
 -- Ported Version of Stig's Weapon Planner to OpenEUO
 --==========================================================================================================
 
-------------------------------------------------------------   
+------------------------------------------------------------
 --------------------------IMPORTS---------------------------
-------------------------------------------------------------   
+------------------------------------------------------------
 
 dofile("../Lib/menulib.lua")
 dofile("../Lib/bodlibv2.lua")
-dofile("../Lib/functions.lua")
-dofile("../Lib/basiclib.lua")
+--dofile("../Lib/functions.lua")  Not used
 
-------------------------------------------------------------------------------------------------------------   
+------------------------------------------------------------------------------------------------------------
 ------------------------------------------------FUNCTIONS---------------------------------------------------
 ------------------------------------------------------------------------------------------------------------
 
@@ -34,7 +33,7 @@ btn_x , btn_y = 250,20
 col_x_offset = x_pos+btn_x+10
 col_y_offset = btn_y+5
 
---Max Value, Starting Value, Current Value, Spending Point Cost 
+--Max Value, Starting Value, Current Value, Spending Point Cost
 local attributes = {
 ["dci"]={50,0,0,3},
 ["hci"]={50,0,0,3},
@@ -107,7 +106,7 @@ coldAreaCB, fireAreaCB, poisonAreaCB, physicalAreaCB},
 }
 
 function init(index)
-    if index == 0 then initZero() 
+    if index == 0 then initZero()
     elseif index == 1 then initOne()
     elseif index == 2 then initTwo()
     else initThree() end
@@ -243,9 +242,9 @@ function goBack(tabs)
     index = tabs.ctrl.TabIndex
     if index > 0 then
         hideElements(elements)
-        elements = elements2D[index] 
-        tabs.ctrl.TabIndex = index - 1 
-        showElements(elements)       
+        elements = elements2D[index]
+        tabs.ctrl.TabIndex = index - 1
+        showElements(elements)
     end
 end
 
@@ -296,14 +295,14 @@ end
 --Returns Select index from the listbox, which starts at 0
 --instead of the usual 1, and gets the corresponding index in
 --the items objects list returned by Jack Penny's itemlib
-function getSelectedIndices(listbox, items) 
+function getSelectedIndices(listbox, items)
         if next(items) == nil then
            return -1
         end
         toReturn = {}
 	for i =0, #items-1 do
 		local bool = listbox.ctrl.GetSelected(i)
-                if bool then 
+                if bool then
                    table.insert(toReturn,i)
                 end
 	end
