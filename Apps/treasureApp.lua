@@ -1,5 +1,4 @@
-    dofile("../Lib/itemlib.lua")    
-    dofile("../Lib/basiclib.lua")
+    dofile("../Lib/itemlib.lua")
     dofile("../Lib/storagelib.lua")
     dofile("../Lib/menulib.lua")
 dofile("../Lig/config.lua")
@@ -12,7 +11,7 @@ dofile("../Lig/config.lua")
     ---Gold 3821
     ----You can view the types in the storagelib and change
     ----this list to whatever you would like looted.
-    
+
     toLoot = {3535,3962,3963,3972,3973,3974,3976,3980,3981,3960,3983,
 		3965,3982,3978,3969,9911,9912,3966,3968,3827,3854,5154,
 	3620,2426,3615,7956,4586,6464,3821,3885,3878,3859,3865,3873,3862,
@@ -39,9 +38,9 @@ dofile("../Lig/config.lua")
     end
     chest = treasure:pop()
 
-    -- search for gold + oints and loot them 
-    loots = item:scan():cont(chest.id) 
-    if not trash then 
+    -- search for gold + oints and loot them
+    loots = item:scan():cont(chest.id)
+    if not trash then
        loots = loots:tp(toLoot)
     end
     for i = 1,#loots do
@@ -55,7 +54,7 @@ dofile("../Lig/config.lua")
            if UO.Gold > goldAmt then
              Storage.storeGoldBOS()
            end
-        end 
+        end
         looted = loots:pop(i)
         if trash then
            looted:drop(1094105672)
@@ -63,8 +62,8 @@ dofile("../Lig/config.lua")
             looted:drop(UO.BackpackID)
         end
         --wait(500)
-        
-   
+
+
     end
 
 end

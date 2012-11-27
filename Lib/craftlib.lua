@@ -2,7 +2,6 @@ dofile("itemlib.lua")
 dofile("functions.lua")
 dofile("resourcelib.lua")
 
-    -- Craft v1.2 using itemlib over basiclib
     Craft = {}
 
     local C = Craft

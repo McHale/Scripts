@@ -1,5 +1,4 @@
 dofile("../Lib/itemlib.lua")
-dofile("../Lib/basiclib.lua")
 dofile("../Lib/menulib.lua")
 dofile("../Lib/functions.lua")
 
@@ -29,7 +28,7 @@ function setBodBook()
         if next(bodbooks:tp(8793)) == nil then
            return -1
         end
- 
+
         bodbooks:property()
         bodbook = bodbooks:pop()
         msgL.ctrl.Caption = getName(bodbook)
@@ -39,11 +38,11 @@ function setPrice()
 	for char in priceStr:gmatch"." do
 	    UO.Key(char)
 	end
-	UO.Key("ENTER")                                            
+	UO.Key("ENTER")
 end
 
 function waitGumpClose(x,y)
-         while UO.ContSizeX == x and UO.ContSizeY == y do 
+         while UO.ContSizeX == x and UO.ContSizeY == y do
                wait(10)
          end
          wait(500)
@@ -55,7 +54,7 @@ function waitGumpOpen(x,y)
          end
 end
 
-function pricePage()	
+function pricePage()
 	local page_end = false
 	local count = 0
 	local i = UO.ContPosY
@@ -71,11 +70,13 @@ function pricePage()
 		       local pix = UO.GetPix(UO.ContPosX+585,i)
 		       if pix == 15707540 then
 		          Click.Gump(585,i-UO.ContPosY)
+				  pop:waitContSize(615,454)
 		          waitGumpClose(615,454)
 		          --setTime = getticks()
 		          setPrice()
-		          waitGumpOpen(615,454)
-		          count = count + 1 
+				  pop:waitContSize(615,454)
+		          --waitGumpOpen(615,454)
+		          count = count + 1
 		          i = i + 20
                        else
                           i = i+1
@@ -96,7 +97,7 @@ function price()
         s,e,num_deeds = string.find(bodbook.stats,"Deeds In Book: (%d+)")
         local count = 0
         while count < tonumber(num_deeds) do
-       	      toAdd = pricePage()			
+       	      toAdd = pricePage()
               count = count + toAdd
               Click.Gump(240, 425)
               wait(1000)
@@ -113,13 +114,13 @@ function run()
 	   errorMsg("Please select a Bod Book")
 	elseif priceStr == "" then
 	   errorMsg("Please enter a Price")
-	elseif priceInt == nil then 
+	elseif priceInt == nil then
 	   errorMsg("Please enter a number for the price")
 	elseif priceInt%1 ~= 0 then
 	   errorMsg("Please enter an integer for the price")
 	else
 	    --Everything is okay run the pricing script
-	    price() 
+	    price()
         end
 end
 

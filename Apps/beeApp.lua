@@ -7,7 +7,7 @@
 --==========================================================
 
 dofile("../Lib/itemlib.lua")
-dofile("../Lib/basiclib.lua")
+dofile("../Lib/functions.lua")
 dofile("../Lib/menulib.lua")
 dofile("../Lig/config.lua")
 -----------BEE LIST----------
@@ -25,7 +25,7 @@ function infestationStatus(id)
          if status == 59367 then
             UO.ExMsg(id,3,48,"yellow infestation")
             return 1
-         elseif status == 4340025 then 
+         elseif status == 4340025 then
             UO.ExMsg(id,3,68,"infestation free")
             return 0
          else --red status
@@ -38,7 +38,7 @@ function diseaseStatus(id)
          if status == 59367 then
             UO.ExMsg(id,3,48,"yellow disease")
             return 1
-         elseif status == 3746089 then 
+         elseif status == 3746089 then
             UO.ExMsg(id,3,68,"disease free")
             return 0
          else --red status
@@ -49,14 +49,14 @@ end
 
 function healthStatus(bee_hive)
 	local name = bee_hive.name
-	if name == "Thriving BeeHive" then 
+	if name == "Thriving BeeHive" then
 		return 0
-	elseif name == "Healthy BeeHive" then 
+	elseif name == "Healthy BeeHive" then
 		return 1
-	elseif name == "Sickly BeeHive" then 
+	elseif name == "Sickly BeeHive" then
 		return 2
-	else 
-		return 2 
+	else
+		return 2
 	end
 end
 
@@ -66,20 +66,20 @@ function analyzeNumber(potion_id)
         local orc_1 = UO.GetPix(x,y)
 	y = y + 4
 	local orc_2 = UO.GetPix(x,y)
-	if (orc_1 == 13024701 or orc_1 == 15724502) and 
+	if (orc_1 == 13024701 or orc_1 == 15724502) and
 		(orc_2 == 13024701 or orc_2 == 15724502) then
 		return 0
 	end
 	if (orc_1 == 13024701 or orc_1 == 15724502) then
 		return 2
 	end
-	return 1 
+	return 1
 end
 
 ---APPLYING POTIONS---
 
 local timeout = 500
-
+--[[
 function waitGump(x,y)
     local current_time = getticks()
     while true do
@@ -92,19 +92,20 @@ function waitGump(x,y)
          end
     end
 end
-
+--]]
 function pressDots()
     for i = UO.ContPosX+20, UO.ContPosX+158, 4 do
         for j = UO.ContPosY+6, UO.ContPosY+138 do
              local pix = UO.GetPix(i,j)
              if pix == 1052812 or pix == 1052804 then
-                 UO.Click(i,j,true,true,true,false) 
+                 UO.Click(i,j,true,true,true,false)
                  wait(50)
              end
              if UO.ContSizeX == 258 and UO.ContSizeY == 219 then
                 return
              end
-             waitGump(178,178)
+             --waitGump(178,178)
+			 pop:waitContSize(178, 178)
         end
     end
 end
@@ -113,9 +114,10 @@ function applyPotion(bee_id, potion_id, num_clicks)
          local applied = analyzeNumber(potion_id)
          while applied < num_clicks do
                Click.Gump(potionClickX, potionClickY[potion_id])
-               waitGump(178,178)
+               --waitGump(178,178)
+			   pop:waitContSize(178,178)
                pressDots()
-               if UO.ContSizeX == 178 and UO.ContSizeY == 178 then
+               if UO.ContSizeX == 178 and UO.ContSizeY == 178 then --intended or needed?
                   pressDots()
                end
 	       sucApplied = analyzeNumber(potion_id)
@@ -160,9 +162,9 @@ for i=1,#bee_hives do
     end
 end
 for i=1,#potionPresent do
-	if potionPresent[i] == 0 then	
+	if potionPresent[i] == 0 then
 		UO.ExMsg(UO.CharID,string.format("You need a keg of greater %s",potions[i]))
-		wait(500)	
+		wait(500)
 	end
 end
 end
@@ -216,14 +218,14 @@ end
 				errorMsg("No Empty Bottles")
 				Click.CloseGump()
 				return
-			end	
+			end
 			if oldBottles.name == bottles.name then
 				UO.ExMsg(bee_hive.id,3,40,"Emptied Hive")
 				canCollect = false
 				Click.CloseGump()
 			else
 				oldBottles = bottles
-			end	
+			end
    	     end
 	end
 
@@ -232,8 +234,8 @@ end
 beeApp = menu:form(200,100,"Bee Helpers")
 
 
-potionB = beeApp:button("potion",50,10,100,20,"Apply Potions") 
-honeyB = beeApp:button("honey",50,35,100,20,"Collect Honey") 
+potionB = beeApp:button("potion",50,10,100,20,"Apply Potions")
+honeyB = beeApp:button("honey",50,35,100,20,"Collect Honey")
 --waxB = beeApp:button("wax",50,60,100,20,"Collect Wax")
 
 potionB:onclick(function() potion() end)

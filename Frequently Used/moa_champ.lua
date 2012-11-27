@@ -1,10 +1,9 @@
-dofile("../Lib/itemlib.lua")
 
 dofile("../Lib/itemlib.lua")
 dofile("../Lib/journallib.lua")
 
 
-local conc_time = getticks() 
+local conc_time = getticks()
 local conc_delay = 15000
 
 local prim_time = getticks()
@@ -58,7 +57,7 @@ function remove(list, element)
 		end
 	end
 	return list
-end	
+end
 
 
 function removeIgnores(list)
@@ -69,14 +68,14 @@ function removeIgnores(list)
 end
 
 function findMob()
-	local mob_list = rangeList(1,350)	
+	local mob_list = rangeList(1,350)
 	local mobs = item:scan(true):ground(10):tp({241,243,72, 11,48,28,71,70,776,757,795,756,796,763,304,752}):rep({3,4,5})
 	if next(mobs) == nil then
 	        print("No Mobs")
 		return false
 	else
 		mobs = removeIgnores(mobs)
-		if next(mobs) == nil then 
+		if next(mobs) == nil then
 		   print("No Reachable Mobs")
                    return false end
 		return mobs:nearest()
@@ -111,13 +110,13 @@ end
 
 
 function conc_weap()
-	if getticks() - conc_time > conc_delay then 
+	if getticks() - conc_time > conc_delay then
 		UO.Macro(15,203)
 		conc_time = getticks()
 		wait(250)
 	end
 end
-	
+
 
 function primary_ability()
 	if getticks() - prim_time > prim_delay and UO.Mana > 35 then
@@ -148,7 +147,7 @@ function use_Ability()
 		secondary_ability()
 	else
 		momentum_strike()
-	end	
+	end
 end
 
 --^^^^^^^^^^^^^^^ACTION/ABILITY FUNCTIONS^^^^^^^^^^^^^^^^^^^^
@@ -159,9 +158,9 @@ end
 function WaitForTarget()
 	local timeout = 4000
 	local current = getticks()
-	while not UO.TargCurs do 
+	while not UO.TargCurs do
 		wait(1)
-		if getticks() - current > timeout then return end	
+		if getticks() - current > timeout then return end
 	end
 end
 
@@ -179,7 +178,7 @@ end
 function pathfind(mob)
 	UO.LTargetID = mob.id
 	mob = item:scan():id(mob.id):property()
-        if next(mob) == nil then 
+        if next(mob) == nil then
            return false
 	else
             mob = mob:pop()
@@ -213,15 +212,15 @@ end
 --123 Angels, 744 Male Vamp, 745 Female Vamp, 400 Male, 401 female, 118 Mule, 190 Noble, 217 Imp Dog not shifted, 279 Imp Ferret, 278 Imp Squirrel
 function findFriendlies()
 	local friendlies = item:scan():tp({118, 123, 190, 217, 748, 278, 279, 400, 401, 744, 745, }):property()
-	if #friendlies > 1 then 
-           return true 
+	if #friendlies > 1 then
+           return true
         end
 	return false
 end
 
 ---------------------YOM----------------------------------------------------
 ---------------------All your fun stuff will happen here-----------------
--------------------------------------------------------------------------	
+-------------------------------------------------------------------------
 function attack(mob)
          use_Ability()
 	UO.LTargetID = mob.id
@@ -259,5 +258,5 @@ while true do
            wait(150)
            mob = findMob()
         end
-	mob = attack(mob)	
+	mob = attack(mob)
 end

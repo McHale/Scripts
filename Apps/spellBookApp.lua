@@ -1,5 +1,4 @@
 dofile("../Lib/itemlib.lua")
-dofile("../Lib/basiclib.lua")
 dofile("../Lib/menulib.lua")
 dofile("../Lib/journallib.lua")
 dofile("../Lib/craftlib.lua")
@@ -11,13 +10,13 @@ tHour, tMinute, tSecond, tMillisec = gettime()
 function castTrees()
 	myjournal = journal:new()
 	UO.Macro(1,0,"[cs enchantedgrove")
-	WaitForTarget()
+	pop:waitTarget()
 	UO.Macro(23,0)
 	wait(250)
 	if myjournal:next() ~= nil then
-		if myjournal:find("The spell Fizzles.", 
+		if myjournal:find("The spell Fizzles.",
                 "Your concentration is disturbed, thus runing thy spell."
-                ,"Insufficient mana for this spell.") ~= nil then	
+                ,"Insufficient mana for this spell.") ~= nil then
                       castTrees()
                end
 	end
@@ -25,12 +24,12 @@ function castTrees()
 end
 
 function needTrees()
-	nHour,nMinute,nSecond,nMillisec = gettime()	
+	nHour,nMinute,nSecond,nMillisec = gettime()
 	dSecond = math.abs(nSecond - tSecond)
-	if dSecond >= 20 then 
+	if dSecond >= 20 then
 	   castTrees()
         end
-end	
+end
 --------------------------------------------
 --------------------------------------------
 
@@ -43,7 +42,7 @@ function dropScrolls(spellBookID)
 	local scrolls = item:scan():cont(UO.BackpackID):tp(scroll_types)
 	for i=1,#scrolls do
 		local scroll = scrolls:pop(i)
-		scroll:drop(spellBookID) 
+		scroll:drop(spellBookID)
 		wait(100)
 	end
 end
@@ -56,7 +55,7 @@ function getSpellBookID()
     		spellbook = spellbooks:pop(i)
     		if string.find(spellbook.stats, "64 Spells") ~= nil then
       			print("Whoo not what i want")
-    		else 
+    		else
 			return spellbook.id
 		end
 	end
@@ -91,7 +90,7 @@ function dropScrolls2(spellBookID)
 	local scrolls = item:scan():cont(UO.BackpackID):tp(scroll_types)
 	for i=1,#scrolls do
 		local scroll = scrolls:pop(i)
-		scroll:drop(spellBookID) 
+		scroll:drop(spellBookID)
 	end
 end
 
@@ -103,7 +102,7 @@ function getSpellBookID2()
     		spellbook = spellbooks:pop(i)
     		if string.find(spellbook.stats, "16 Spells") ~= nil or  string.find(spellbook.stats,"17 Spells") then
       			print("Whoo not what i want")
-    		else 
+    		else
 			return spellbook.id
 		end
 	end
@@ -133,20 +132,20 @@ end
 spellApp = menu:form(200,100,"S.Book Maker")
 
 -- adds a button to the form at 0,0 sized 100x20 and with text "click me!" on it
-spellB = spellApp:button("mage",50,10,100,20,"Make SpellBook") 
+spellB = spellApp:button("mage",50,10,100,20,"Make SpellBook")
 dropMB = spellApp:button("dropM",50,35,100,20,"Drop Mage Spells")
-necroB = spellApp:button("necro",50,60,100,20,"Make NecroBook") 
+necroB = spellApp:button("necro",50,60,100,20,"Make NecroBook")
 dropNB = spellApp:button("dropN",50,80,100,20,"Drop Necro Spells")
 
 
 
 spellB:onclick(function() spellBook() end)
-dropMB:onclick(function() 
+dropMB:onclick(function()
 sb_id = getSpellBookID()
 dropScrolls(sb_id)
 end)
 necroB:onclick(function() necroBook() end)
-dropMB:onclick(function() 
+dropMB:onclick(function()
 sb_id = getSpellBookID2()
 dropScrolls2(sb_id)
 end)
