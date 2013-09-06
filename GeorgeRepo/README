@@ -1,0 +1,55 @@
+//Repository dump from George//
+File list:
+
+	artscan.lua:	simple constant item name parser.  
+						currently configured to alert when 'Artifact'
+						is detected on the floor. (mainly used for steables)
+						
+	autoloot.lua 	stub.
+	
+	beebeegone.lua	removes pesky bee swarms over active hives
+						makes using bee hives 1000% easier
+	
+	bee* series		fully automated and highly illegal;
+						do not use.
+						
+	blazehealer.lua	port from euo->oeuo
+	
+	bod.lua			ultra fast bod gatherer
+						logs in on all five chars
+						
+	buy.lua			stub.
+						used to quickly buy max quantity of resources
+						
+	craft.lua		stub.  training purposes.
+	
+	devlinrearm.lua	port eou->oeuo
+	
+	lumberfel.lua	auto tree chopper
+						requires player to manually wander through forests
+						
+	lumber.lua		fully automated and highly illegal;
+						do not use.
+						
+	miner* series	fully automated and highly illegal;
+						do not use.
+						
+	runecp.lua		nifty runebook copier
+						bypasses cooldown by setting default runes
+							and manually recalling off it
+	
+	runedb* series	essential tool for building runebook libraries
+						player must manually recall to a location to mark
+						script determines if the recall location is new
+						and not within x number of squares
+							then marks a new rune, names it, stores it in
+							the runebook copy, and recalls back to the source
+						rune locations are saved on the file system
+	
+	sorter* series	stub.  only parses the main pack
+						trashes most common useless items
+						uses scissors to make cloth/leather from armor/cloths
+						will smelt metal items if near forge/anvil and have tools
+						stores resources in keys
+						
+-TMC
